@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Raylib (gcc)",
+      "type": "shell",
+      "command": "gcc",
+      "args": [
+        "${relativeFile}",
+        "-o", "${fileDirname}\\${fileBasenameNoExtension}.exe",
+        "-I", "${workspaceFolder}\\include",
+        "-L", "${workspaceFolder}\\lib",
+        "-lraylib",
+        "-lopengl32",
+        "-lgdi32",
+        "-lwinmm"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    }
+  ]
+}
