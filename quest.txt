@@ -1,0 +1,168 @@
+LEVEL:1
+QID:1
+QUESTION:Jika semua kucing adalah hewan, dan semua hewan bisa bergerak, maka...
+A:Semua kucing bisa bergerak
+B:Semua hewan adalah kucing
+C:Tidak ada kucing yang bisa bergerak
+---
+LEVEL:1
+QID:2
+QUESTION:Semua bunga adalah tumbuhan. Mawar adalah bunga. Maka...
+A:Mawar adalah tumbuhan
+B:Mawar bukan tumbuhan
+C:Semua tumbuhan adalah mawar
+---
+LEVEL:2
+QID:1
+QUESTION:Pernyataan: "Tidak semua siswa rajin." Artinya...
+A:Semua siswa malas
+B:Ada siswa yang tidak rajin
+C:Semua siswa rajin
+---
+LEVEL:2
+QID:2
+QUESTION:"Tidak semua buah berwarna merah." Artinya...
+A:Semua buah berwarna merah
+B:Ada buah yang tidak merah
+C:Semua buah tidak merah
+---
+LEVEL:3
+QID:1
+QUESTION:Jika hujan turun, maka jalan basah. Jalan basah berarti...
+A:Pasti hujan turun
+B:Bisa jadi hujan turun
+C:Tidak mungkin hujan turun
+---
+LEVEL:3
+QID:2
+QUESTION:Jika lampu menyala, maka ada listrik. Lampu menyala berarti...
+A:Pasti ada listrik
+B:Tidak ada listrik
+C:Listrik tidak berhubungan
+---
+LEVEL:4
+QID:1
+QUESTION:Semua A adalah B. Semua B adalah C. Maka...
+A:Semua A adalah C
+B:Semua C adalah A
+C:Semua B adalah A
+---
+LEVEL:4
+QID:2
+QUESTION:Semua guru adalah pendidik. Semua pendidik adalah pekerja. Maka...
+A:Semua guru adalah pekerja
+B:Semua pekerja adalah guru
+C:Semua guru bukan pekerja
+---
+LEVEL:5
+QID:1
+QUESTION:Ayah : Anak = Guru : ...
+A:Murid
+B:Buku
+C:Sekolah
+---
+LEVEL:5
+QID:2
+QUESTION:Dokter : Pasien = Petani : ...
+A:Sawah
+B:Tanaman
+C:Pupuk
+---
+LEVEL:6
+QID:1
+QUESTION:Pola: 2, 4, 8, 16, ...
+A:24
+B:32
+C:36
+---
+LEVEL:6
+QID:2
+QUESTION:Pola: 1, 3, 6, 10, ...
+A:12
+B:14
+C:15
+---
+LEVEL:7
+QID:1
+QUESTION:Jika Ali lebih tinggi dari Budi, dan Budi lebih tinggi dari Citra, maka...
+A:Ali lebih tinggi dari Citra
+B:Citra lebih tinggi dari Ali
+C:Ali sama tinggi dengan Citra
+---
+LEVEL:7
+QID:2
+QUESTION:Jika Dina lebih pintar dari Eko, dan Eko lebih pintar dari Fira, maka...
+A:Dina lebih pintar dari Fira
+B:Fira lebih pintar dari Dina
+C:Dina sama pintar dengan Fira
+---
+LEVEL:8
+QID:1
+QUESTION:Semua mahasiswa Informatika suka coding. Ayu adalah mahasiswa Informatika. Maka....
+A:Ayu suka coding
+B:Ayu tidak suka coding
+C:Ayu mungkin suka coding
+---
+LEVEL:8
+QID:2
+QUESTION:Semua dosen mengajar. Pak Budi adalah dosen. Maka...
+A:Pak Budi mengajar
+B:Pak Budi tidak mengajar
+C:Pak Budi mungkin mengajar
+---
+LEVEL:9
+QID:1
+QUESTION:Semua buah adalah manis. Jeruk adalah buah. Tetapi ada jeruk yang asam. Maka...
+A:Semua jeruk pasti manis
+B:Ada jeruk yang tidak manis
+C:Semua buah tidak manis
+---
+LEVEL:9
+QID:2
+QUESTION:Semua burung bisa terbang. Penguin adalah burung. Maka...
+A:Penguin bisa terbang
+B:Ada burung yang tidak bisa terbang
+C:Semua burung kecil bisa terbang
+---
+LEVEL:10
+QID:1
+QUESTION:Jika P → Q, dan P benar, maka...
+A:Q benar
+B:Q salah
+C:P salah
+---
+LEVEL:10
+QID:2
+QUESTION:Jika P → Q, dan Q salah, maka...
+A:P salah
+B:P benar
+C:P tidak berhubungan
+---
+LEVEL:11
+QID:1
+QUESTION:A selalu berkata benar, B selalu berbohong, C kadang benar kadang salah. Jika seseorang berkata: "Saya bukan B." Maka orang itu adalah...
+A:A
+B:B
+C:C
+---
+LEVEL:11
+QID:2
+QUESTION:Jika seseorang berkata: "Saya adalah B." Maka orang itu adalah...
+A:A
+B:B
+C:C
+---
+LEVEL:12
+QID:1
+QUESTION:Jika saya belajar, maka saya lulus. Jika saya lulus, maka saya bisa bekerja. Maka kesimpulan yang benar adalah...
+A:Belajar cukup untuk bisa bekerja
+B:Belajar perlu tapi tidak cukup untuk bekerja
+C:Belajar tidak ada hubungannya dengan bekerja
+---
+LEVEL:12
+QID:2
+QUESTION:Jika saya tidak belajar, maka saya tidak lulus. Jika saya tidak lulus, maka saya tidak bekerja. Maka kesimpulan yang benar adalah...
+A:Tidak belajar cukup untuk tidak bekerja
+B:Tidak belajar perlu tapi tidak cukup untuk tidak bekerja
+C:Tidak belajar tidak berhubungan dengan bekerja
+---
