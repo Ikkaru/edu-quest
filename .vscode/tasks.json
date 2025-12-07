@@ -1,25 +1,26 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Build Raylib (gcc)",
-      "type": "shell",
-      "command": "gcc",
-      "args": [
-        "${relativeFile}",
-        "-o", "${fileDirname}\\${fileBasenameNoExtension}.exe",
-        "-I", "${workspaceFolder}\\include",
-        "-L", "${workspaceFolder}\\lib",
-        "-lraylib",
-        "-lopengl32",
-        "-lgdi32",
-        "-lwinmm"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "group": "build",
-      "problemMatcher": ["$gcc"]
-    }
-  ]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Game (Debug)",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-g",               // PENTING: Aktifkan mode debug
+                "-O0",              // PENTING: Matikan optimasi agar kode urut
+                "-Wall",            // Tampilkan warning
+                "${workspaceFolder}/src/*.c",    // Semua file di folder src
+                "-o",
+                "${workspaceFolder}/bin/game_debug.exe", // Output ke folder bin
+                "-I${workspaceFolder}/include",  // Include path
+                "-L${workspaceFolder}/lib",      // Lib path
+                "-lraylib", "-lopengl32", "-lgdi32", "-lwinmm" // Libraries
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        }
+    ]
 }
