@@ -3,6 +3,10 @@
 #include "global.h"
 
 int main() {
+
+    // Initilize State
+    GameState currentState;
+
     // Initilize Window
     InitWindow(1280, 720, "EduQuest (Debug)");
     SetTargetFPS(60);
@@ -13,20 +17,30 @@ int main() {
     SetWindowIcon(icon);
     UnloadImage(icon);
 
-    InitMainMenu();
+    InitMainMenu(); 
+
+    currentState = MAIN_MENU;
 
     // Application Logic
     while (!WindowShouldClose())
     {   
-
-        // Draw Main Menu
-        BeginDrawing();
-            DrawMainMenu();
-        DrawMainMenu();
+        // Fase Draw
+        switch (currentState)
+        {
+        case MAIN_MENU:
+            BeginDrawing();
+                DrawMainMenu();
+            EndDrawing();
+            UnloadMainMenu();
+            currentState = BATTLE;
+            break;
+        
+        default:
+            break;
+        }
         
     }
 
-    UnloadMainMenu();
     CloseWindow();
     return 0;
 }
