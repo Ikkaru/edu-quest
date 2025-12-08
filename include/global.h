@@ -8,8 +8,6 @@ typedef enum {
     GAME_OVER
 } GameState;
 
-void MainMenu();
-void DrawMainMenu();
 
 
 #endif

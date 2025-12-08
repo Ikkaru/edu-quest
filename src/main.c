@@ -1,9 +1,10 @@
 #include "raylib.h"
+#include "mainMenu.h"
 #include "global.h"
 
 int main() {
     // Initilize Window
-    InitWindow(1280, 720, "Edu Quest (Debug)");
+    InitWindow(1280, 720, "EduQuest (Debug)");
     SetTargetFPS(60);
 
     // Set Window Icon
@@ -12,12 +13,20 @@ int main() {
     SetWindowIcon(icon);
     UnloadImage(icon);
 
+    InitMainMenu();
+
     // Application Logic
-    while(!WindowShouldClose())
+    while (!WindowShouldClose())
     {   
-        MainMenu();
+
+        // Draw Main Menu
+        BeginDrawing();
+            DrawMainMenu();
+        DrawMainMenu();
+        
     }
 
+    UnloadMainMenu();
     CloseWindow();
     return 0;
 }
