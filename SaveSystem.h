@@ -6,13 +6,12 @@ typedef struct
 {
     int *scores;
     int count;
-    int capacity;
 } playerHistory;
 
 // Protoype untuk menyimpan skor
-void saveScore(const char* player_name, int score);
+void saveScore(const char* player_name, char* mode, int score);
 
 // Prototype untuk load skor
-playerHistory loadScore(const char* player_name);
+playerHistory loadScore(const char* player_name, char* mode);
 
 #endif

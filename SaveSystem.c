@@ -2,13 +2,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include "SaveSystem.h"
-#define SAVEDIR "history/"
+#define SAVEDIR "history"
 
-void saveScore(const char* player_name, int score) {
+void saveScore(const char* player_name, char* mode,int score) {
     char filePath[1000];
 
     // Concatenation File Path with player Name
-    sprintf(filePath, "%s%s.txt", SAVEDIR, player_name);
+    sprintf(filePath, "%s/%s/%s.txt", SAVEDIR, mode, player_name);
 
     // Open the file 
     FILE *file = fopen(filePath, "a");
@@ -23,7 +23,7 @@ void saveScore(const char* player_name, int score) {
     }   
 }
 
-playerHistory loadScore(const char* player_name) {
+playerHistory loadScore(const char* player_name, char* mode) {
     playerHistory history;
 
     history.count = 0;
@@ -31,7 +31,7 @@ playerHistory loadScore(const char* player_name) {
 
     // Check the save score file
     char filePath[1000];
-    sprintf(filePath, "%s%s.txt", SAVEDIR, player_name);
+    sprintf(filePath, "%s/%s/%s.txt", SAVEDIR, mode, player_name);
     FILE *file = fopen(filePath, "r");
 
     if (file != NULL) {
@@ -55,18 +55,9 @@ playerHistory loadScore(const char* player_name) {
 
         return history;
     } else {
-        printf("Cannot Find Saved File Try to Create one");
+        printf("[SaveSystem] Cannot Find Saved File Trying to Create one\n");
+        FILE *file = fopen(filePath, "w");
+        fclose(file);
+        printf("[SaveSystem] Successfully Created %s\n", filePath);
     }
 }
-
-
-int main() {
-    playerHistory player = loadScore("ikhsan");
-
-    for (int i = 0; i < player.count; i++) {
-        printf("%d\n", player.scores[i]);
-    }
-
-    free(player.scores);
-}
-
