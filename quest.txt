@@ -1,0 +1,415 @@
+QUESTION: Jika semua kucing adalah hewan, dan semua hewan bisa bergerak, maka...
+A: Semua kucing bisa bergerak
+B: Semua hewan adalah kucing
+C: Tidak ada kucing yang bisa bergerak
+---
+QUESTION: Semua bunga adalah tumbuhan. Mawar adalah bunga. Maka...
+A: Mawar adalah tumbuhan
+B: Mawar bukan tumbuhan
+C: Semua tumbuhan adalah mawar
+---
+QUESTION: Pernyataan: "Tidak semua siswa rajin." Artinya...
+A: Semua siswa malas
+B: Ada siswa yang tidak rajin
+C: Semua siswa rajin
+---
+QUESTION: "Tidak semua buah berwarna merah." Artinya...
+A: Semua buah berwarna merah
+B: Ada buah yang tidak merah
+C: Semua buah tidak merah
+---
+QUESTION: Jika hujan turun, maka jalan basah. Jalan basah berarti...
+A: Pasti hujan turun
+B: Bisa jadi hujan turun
+C: Tidak mungkin hujan turun
+---
+QUESTION: Jika lampu menyala, maka ada listrik. Lampu menyala berarti...
+A: Pasti ada listrik
+B: Tidak ada listrik
+C: Listrik tidak berhubungan
+---
+QUESTION: Semua A adalah B. Semua B adalah C. Maka...
+A: Semua A adalah C
+B: Semua C adalah A
+C: Semua B adalah A
+---
+QUESTION: Semua guru adalah pendidik. Semua pendidik adalah pekerja. Maka...
+A: Semua guru adalah pekerja
+B: Semua pekerja adalah guru
+C: Semua guru bukan pekerja
+---
+QUESTION: Ayah : Anak = Guru : ...
+A: Murid
+B: Buku
+C: Sekolah
+---
+QUESTION: Dokter : Pasien = Petani : ...
+A: Sawah
+B: Tanaman
+C: Pupuk
+---
+QUESTION: Pola: 2, 4, 8, 16, ...
+A: 24
+B: 32
+C: 36
+---
+QUESTION: Pola: 1, 3, 6, 10, ...
+A: 12
+B: 14
+C: 15
+---
+QUESTION: Jika Ali lebih tinggi dari Budi, dan Budi lebih tinggi dari Citra, maka...
+A: Ali lebih tinggi dari Citra
+B: Citra lebih tinggi dari Ali
+C: Ali sama tinggi dengan Citra
+---
+QUESTION: Jika Dina lebih pintar dari Eko, dan Eko lebih pintar dari Fira, maka...
+A: Dina lebih pintar dari Fira
+B: Fira lebih pintar dari Dina
+C: Dina sama pintar dengan Fira
+---
+QUESTION: Semua mahasiswa Informatika suka coding. Ikhsan adalah mahasiswa Informatika. Maka...
+A: Ikhsan suka coding
+B: Ikhsan tidak suka coding
+C: Ikhsan mungkin suka coding
+---
+QUESTION: Semua dosen mengajar. Pak Budi adalah dosen. Maka...
+A: Pak Budi mengajar
+B: Pak Budi tidak mengajar
+C: Pak Budi mungkin mengajar
+---
+QUESTION: Semua buah adalah manis. Jeruk adalah buah. Tetapi ada jeruk yang asam. Maka...
+A: Semua jeruk pasti manis
+B: Ada jeruk yang tidak manis
+C: Semua buah tidak manis
+---
+QUESTION: Semua burung bisa terbang. Penguin adalah burung. Maka...
+A: Penguin bisa terbang
+B: Ada burung yang tidak bisa terbang
+C: Semua burung kecil bisa terbang
+---
+QUESTION: Jika P → Q, dan P benar, maka...
+A: Q benar
+B: Q salah
+C: P salah
+---
+QUESTION: Jika P → Q, dan Q salah, maka...
+A: P salah
+B: P benar
+C: P tidak berhubungan
+---
+QUESTION: Siapakah penemu bola lampu?
+A: Nikola Tesla
+B: Thomas Edison
+C: Albert Einstein
+---
+QUESTION: Apa nama planet terdekat dari Matahari?
+A: Venus
+B: Merkurius
+C: Mars
+---
+QUESTION: Berapa banyak planet dalam tata surya kita?
+A: 9
+B: 8
+C: 7
+---
+QUESTION: Apa nama sungai terpanjang di dunia?
+A: Sungai Amazon
+B: Sungai Nil
+C: Sungai Mississippi
+---
+QUESTION: Apa singkatan dari UNESCO?
+A: United Nations Educational, Scientific and Cultural Organization
+B: United Nations Economic and Social Council
+C: United Nations Environment and Climate Organization
+---
+QUESTION: Apa ibukota Indonesia?
+A: Jakarta
+B: Surabaya
+C: Bandung
+---
+QUESTION: Siapakah presiden pertama Indonesia?
+A: Soekarno
+B: Soeharto
+C: BJ Habibie
+---
+QUESTION: Apa nama samudera terbesar di dunia?
+A: Samudra Atlantik
+B: Samudra Pasifik
+C: Samudra Hindia
+---
+QUESTION: Apa simbol kimia untuk emas?
+A: Au
+B: Ag
+C: Fe
+---
+QUESTION: Jumlah kaki laba-laba?
+A: 8
+B: 6
+C: 10
+---
+QUESTION: Jumlah hari dalam tahun kabisat?
+A: 366
+B: 365
+C: 360
+---
+QUESTION: Tokoh yang menjahit bendera merah putih menjelang proklamasi?
+A: Fatmawati
+B: Kartini
+C: Cut Nyak Dien
+---
+QUESTION: Kota yang dijuluki kota hujan?
+A: Bogor
+B: Bandung
+C: Medan
+---
+QUESTION: Rumah adat suku Minang?
+A: Rumah Gadang
+B: Joglo
+C: Tongkonan
+---
+QUESTION: Hasil dari 10 x 12?
+A: 120
+B: 112
+C: 122
+---
+QUESTION: Hasil penjumlahan 8463 + 2354?
+A: 10817
+B: 10807
+C: 10827
+---
+QUESTION: Planet terbesar di tata surya?
+A: Jupiter
+B: Saturnus
+C: Bumi
+---
+QUESTION: Jalur laut 12 mil dari garis dasar?
+A: Zona laut teritorial
+B: Zona ekonomi eksklusif
+C: Landas kontinen
+---
+QUESTION: Landas kontinen laut Indonesia?
+A: 200 m
+B: 100 m
+C: 500 m
+---
+QUESTION: Salah satu usaha pelestarian laut?
+A: Pelarangan merusak terumbu karang
+B: Penangkapan ikan berlebihan
+C: Pembuangan sampah ke laut
+---
+QUESTION: Bantuan Operasional Sekolah tanggung jawab pemerintah bidang?
+A: Pendidikan
+B: Kesehatan
+C: Pertanian
+---
+QUESTION: Provinsi yang melepaskan diri dari NKRI?
+A: Timor Timur
+B: Aceh
+C: Papua
+---
+QUESTION: Gunung Kilimanjaro terdapat di negara?
+A: Tanzania
+B: Kenya
+C: Uganda
+---
+QUESTION: Sungai terpanjang di Mesir?
+A: Sungai Nil
+B: Sungai Amazon
+C: Sungai Mississippi
+---
+QUESTION: Program pemerintah menekan laju pertumbuhan penduduk?
+A: Keluarga berencana
+B: Urbanisasi
+C: Transmigrasi
+---
+QUESTION: Dasar pelaksanaan koperasi?
+A: Pancasila dan UUD 1945
+B: Undang-undang Perdagangan
+C: Peraturan Menteri
+---
+QUESTION: Antonim kata dermawan?
+A: Kikir
+B: Baik hati
+C: Ramah
+---
+QUESTION: Alat musik digesek?
+A: Biola
+B: Gitar
+C: Piano
+---
+QUESTION: Sinonim kata langka?
+A: Jarang
+B: Banyak
+C: Umum
+---
+QUESTION: Perubahan benda padat jadi gas?
+A: Menyublim
+B: Menguap
+C: Mencair
+---
+QUESTION: Ibukota Jepang?
+A: Tokyo
+B: Kyoto
+C: Osaka
+---
+QUESTION: Komponen utama atmosfer bumi?
+A: Nitrogen
+B: Oksigen
+C: Karbon dioksida
+---
+QUESTION: Ilmuwan hukum gravitasi universal?
+A: Isaac Newton
+B: Albert Einstein
+C: Galileo Galilei
+---
+QUESTION: Simbol kimia besi?
+A: Fe
+B: Au
+C: Ag
+---
+QUESTION: Tokoh perjuangan India melawan Inggris?
+A: Mahatma Gandhi
+B: Jawaharlal Nehru
+C: Subhas Chandra Bose
+---
+QUESTION: Mata uang Jepang?
+A: Yen
+B: Dollar
+C: Won
+---
+QUESTION: Ilmu tentang benda hidup dan lingkungan?
+A: Biologi
+B: Fisika
+C: Kimia
+---
+QUESTION: Ilmu tentang materi, energi, perubahan?
+A: Kimia
+B: Biologi
+C: Geologi
+---
+QUESTION: Ilmu tentang gerakan benda dan gaya?
+A: Fisika
+B: Matematika
+C: Astronomi
+---
+QUESTION: Ilmuwan teori relativitas?
+A: Albert Einstein
+B: Isaac Newton
+C: Galileo Galilei
+---
+QUESTION: Kepanjangan NASA?
+A: National Aeronautics and Space Administration
+B: North American Space Agency
+C: National Astronomy and Science Association
+---
+QUESTION: Alat ukur suhu tubuh?
+A: Termometer
+B: Barometer
+C: Higrometer
+---
+QUESTION: Alat ukur tekanan udara?
+A: Barometer
+B: Termometer
+C: Altimeter
+---
+QUESTION: Alat ukur kelembapan udara?
+A: Higrometer
+B: Termometer
+C: Barometer
+---
+QUESTION: 10 November diperingati sebagai?
+A: Hari Pahlawan
+B: Hari Kemerdekaan
+C: Hari Pendidikan
+---
+QUESTION: Soekarno dan Hatta diasingkan ke?
+A: Rengasdengklok
+B: Bandung
+C: Surabaya
+---
+QUESTION: Penemu benua Amerika?
+A: Christopher Columbus
+B: Amerigo Vespucci
+C: Ferdinand Magellan
+---
+QUESTION: Presiden pertama Amerika Serikat?
+A: George Washington
+B: Abraham Lincoln
+C: Thomas Jefferson
+---
+QUESTION: Ibukota Australia?
+A: Canberra
+B: Sydney
+C: Melbourne
+---
+QUESTION: Negara terpadat penduduknya?
+A: China
+B: India
+C: Amerika Serikat
+---
+QUESTION: Pelukis Mona Lisa?
+A: Leonardo da Vinci
+B: Pablo Picasso
+C: Michelangelo
+---
+QUESTION: Sungai terpanjang di dunia?
+A: Sungai Nil
+B: Sungai Amazon
+C: Sungai Mississippi
+---
+QUESTION: Gunung tertinggi di dunia?
+A: Everest
+B: Kilimanjaro
+C: Elbrus
+---
+QUESTION: Danau terbesar di dunia?
+A: Danau Kaspia
+B: Danau Superior
+C: Danau Victoria
+---
+QUESTION: Burung tercepat di dunia?
+A: Falcon
+B: Elang
+C: Rajawali
+---
+QUESTION: Mamalia laut terpintar?
+A: Lumba-lumba hidung botol
+B: Paus orca
+C: Anjing laut
+---
+QUESTION: Negara terkaya di dunia?
+A: Qatar
+B: Amerika Serikat
+C: Jepang
+---
+QUESTION: Negara termiskin di dunia?
+A: Kongo
+B: Ethiopia
+C: Haiti
+---
+QUESTION: Monumen terkenal di Paris?
+A: Menara Eiffel
+B: Arc de Triomphe
+C: Louvre
+---
+QUESTION: Patung Liberty dibuat di negara?
+A: Prancis
+B: Amerika Serikat
+C: Inggris
+---
+QUESTION: Bahasa Inggris kapal selam?
+A: Submarine
+B: Ship
+C: Boat
+---
+QUESTION: Pusat peredaran tata surya?
+A: Matahari
+B: Bumi
+C: Bulan
+---
+QUESTION: Ilmu Pengetahuan Alam disebut juga?
+A: Sains
+B: Filsafat
+C: Teknologi
+---
