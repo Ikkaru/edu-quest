@@ -1,5 +1,6 @@
 #pragma once
+#include "global.h"
 void InitMainMenu();
-// void UpdateMainMenu();
+GameState UpdateMainMenu();
 void DrawMainMenu();
 void UnloadMainMenu();

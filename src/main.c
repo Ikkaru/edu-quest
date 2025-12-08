@@ -1,6 +1,9 @@
+#define RAYGUI_IMPLEMENTATION
 #include "raylib.h"
 #include "mainMenu.h"
 #include "global.h"
+#include "raygui.h"
+
 
 int main() {
 
@@ -24,15 +27,25 @@ int main() {
     // Application Logic
     while (!WindowShouldClose())
     {   
-        // Fase Draw
+        // Logic
+        switch (currentState)
+        {
+        case MAIN_MENU:
+            UpdateMainMenu();
+            break;
+        
+        default:
+            break;
+        }
+
+
+        // Draw
         switch (currentState)
         {
         case MAIN_MENU:
             BeginDrawing();
                 DrawMainMenu();
             EndDrawing();
-            UnloadMainMenu();
-            currentState = BATTLE;
             break;
         
         default:
@@ -40,6 +53,8 @@ int main() {
         }
         
     }
+
+    UnloadMainMenu();
 
     CloseWindow();
     return 0;

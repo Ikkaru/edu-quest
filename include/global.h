@@ -6,7 +6,8 @@ typedef enum {
     GAMEPLAY,
     SPECIAL_EVENT,
     BATTLE,
-    GAME_OVER
+    GAME_OVER,
+    EXIT
 } GameState;
 
 // Game Mode
@@ -25,8 +26,9 @@ typedef struct
     int maxEnergy;
     int HP;
     int maxHP;
-    char name[100];
+    char name[101];
 } PlayerData;
 
 extern PlayerData player;
+extern GameState currentState;
 
