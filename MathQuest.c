@@ -25,13 +25,12 @@ Question generateLevel1() {
     
     q.num1 = num1;
     q.num2 = num2;
-    q.op = op;  // GANTI: operator -> op
+    q.op = op;
     
     if (op == '+') {
         q.correctAnswer = num1 + num2;
         sprintf(q.questionText, "%d %c %d = ?", num1, op, num2);
     } else {
-        // Pastikan hasil pengurangan tidak negatif
         if (num1 < num2) {
             int temp = num1;
             num1 = num2;
@@ -43,7 +42,6 @@ Question generateLevel1() {
         sprintf(q.questionText, "%d %c %d = ?", num1, op, num2);
     }
     
-    q.timeLimit = 10;
     return q;
 }
 
@@ -56,7 +54,7 @@ Question generateLevel2() {
     
     q.num1 = num1;
     q.num2 = num2;
-    q.op = op;  // GANTI: operator -> op
+    q.op = op;
     
     switch(op) {
         case '+':
@@ -78,7 +76,6 @@ Question generateLevel2() {
     }
     
     sprintf(q.questionText, "%d %c %d = ?", q.num1, op, q.num2);
-    q.timeLimit = 12;
     return q;
 }
 
@@ -91,10 +88,9 @@ Question generateLevel3() {
     
     q.num1 = num1;
     q.num2 = num2;
-    q.op = op;  // GANTI: operator -> op
+    q.op = op;
     
     if (op == '/') {
-        // Pastikan pembagian menghasilkan bilangan bulat
         while (num2 == 0 || num1 % num2 != 0) {
             num1 = generateRandomNumber(1, 20);
             num2 = generateRandomNumber(1, 20);
@@ -118,81 +114,15 @@ Question generateLevel3() {
     }
     
     sprintf(q.questionText, "%d %c %d = ?", q.num1, op, q.num2);
-    q.timeLimit = 15;
     return q;
 }
 
-// LEVEL 4: Sedang (Campur 2 operator)
+// LEVEL 4: Sedang (Akar sederhana) - sebelumnya level 5
 Question generateLevel4() {
-    Question q;
-    int num1 = generateRandomNumber(1, 25);
-    int num2 = generateRandomNumber(1, 25);
-    int num3 = generateRandomNumber(1, 25);
-    char op1 = getRandomOperator("+-*");
-    char op2 = getRandomOperator("+-*");
-    
-    // Hindari pembagian dengan 0
-    if (op2 == '/' && num3 == 0) num3 = 1;
-    
-    q.num1 = num1;
-    q.num2 = num2;
-    q.num3 = num3;
-    q.op = op1;   // GANTI: operator -> op
-    q.op2 = op2;  // GANTI: operator2 -> op2
-    
-    // Hitung sesuai urutan operasi
-    int result;
-    if ((op1 == '+' || op1 == '-') && (op2 == '*' || op2 == '/')) {
-        // op2 dihitung dulu
-        if (op2 == '*') result = num2 * num3;
-        else if (op2 == '/') {
-            while (num3 == 0 || num2 % num3 != 0) {
-                num2 = generateRandomNumber(1, 25);
-                num3 = generateRandomNumber(1, 25);
-            }
-            result = num2 / num3;
-        } else {
-            result = num2 + num3;
-        }
-        
-        if (op1 == '+') q.correctAnswer = num1 + result;
-        else q.correctAnswer = num1 - result;
-    } else {
-        // Dari kiri ke kanan
-        if (op1 == '+') result = num1 + num2;
-        else if (op1 == '-') result = num1 - num2;
-        else if (op1 == '*') result = num1 * num2;
-        else {
-            while (num2 == 0 || num1 % num2 != 0) {
-                num1 = generateRandomNumber(1, 25);
-                num2 = generateRandomNumber(1, 25);
-            }
-            result = num1 / num2;
-        }
-        
-        if (op2 == '+') q.correctAnswer = result + num3;
-        else if (op2 == '-') q.correctAnswer = result - num3;
-        else if (op2 == '*') q.correctAnswer = result * num3;
-        else {
-            while (num3 == 0 || result % num3 != 0) {
-                num3 = generateRandomNumber(1, 25);
-            }
-            q.correctAnswer = result / num3;
-        }
-    }
-    
-    sprintf(q.questionText, "%d %c %d %c %d = ?", num1, op1, num2, op2, num3);
-    q.timeLimit = 18;
-    return q;
-}
-
-// LEVEL 5: Sedang (Akar sederhana)
-Question generateLevel5() {
     Question q;
     int num = generateRandomNumber(10, 50);
     int perfectSquare;
     
-    // Cari bilangan kuadrat sempurna terdekat
     do {
         num = generateRandomNumber(10, 50);
         int root = (int)sqrt(num);
@@ -201,13 +131,12 @@ Question generateLevel5() {
     
     q.num1 = num;
     q.correctAnswer = (int)sqrt(num);
-    sprintf(q.questionText, "√%d = ?", num);
-    q.timeLimit = 20;
+    sprintf(q.questionText, "sqrt(%d) = ?", num);
     return q;
 }
 
-// LEVEL 6: Sedang+ (Campur 3 operator dengan tanda kurung)
-Question generateLevel6() {
+// LEVEL 5: Sedang+ (Campur 3 operator dengan tanda kurung) - sebelumnya level 6
+Question generateLevel5() {
     Question q;
     int num1 = generateRandomNumber(1, 40);
     int num2 = generateRandomNumber(1, 40);
@@ -218,10 +147,9 @@ Question generateLevel6() {
     q.num1 = num1;
     q.num2 = num2;
     q.num3 = num3;
-    q.op = op1;   // GANTI: operator -> op
-    q.op2 = op2;  // GANTI: operator2 -> op2
+    q.op = op1;
+    q.op2 = op2;
     
-    // Selalu hitung dalam kurung dulu
     int inParentheses;
     if (op1 == '+') inParentheses = num1 + num2;
     else if (op1 == '-') inParentheses = num1 - num2;
@@ -238,64 +166,31 @@ Question generateLevel6() {
     }
     
     sprintf(q.questionText, "(%d %c %d) %c %d = ?", num1, op1, num2, op2, num3);
-    q.timeLimit = 22;
     return q;
 }
 
-// LEVEL 7: Sulit (Pangkat 2)
-Question generateLevel7() {
+// LEVEL 6: Sulit (Pangkat 2) - sebelumnya level 7
+Question generateLevel6() {
     Question q;
     int num = generateRandomNumber(1, 60);
     
     q.num1 = num;
     q.correctAnswer = num * num;
-    sprintf(q.questionText, "%d² = ?", num);
-    q.timeLimit = 25;
+    sprintf(q.questionText, "%d^2 = ?", num);
     return q;
 }
 
-// LEVEL 8: Sulit (Semua operator)
-Question generateLevel8() {
-    Question q;
-    int num1 = generateRandomNumber(1, 80);
-    int num2 = generateRandomNumber(1, 80);
-    int num3 = generateRandomNumber(1, 80);
-    
-    // Pastikan num3 adalah bilangan kuadrat sempurna untuk akar
-    int root = (int)sqrt(num3);
-    while (root * root != num3) {
-        num3 = generateRandomNumber(1, 80);
-        root = (int)sqrt(num3);
-    }
-    
-    q.num1 = num1;
-    q.num2 = num2;
-    q.num3 = num3;
-    
-    // Hitung: num1 / num2 + √num3
-    while (num2 == 0 || num1 % num2 != 0) {
-        num1 = generateRandomNumber(1, 80);
-        num2 = generateRandomNumber(1, 80);
-    }
-    
-    q.correctAnswer = (num1 / num2) + (int)sqrt(num3);
-    sprintf(q.questionText, "%d ÷ %d + √%d = ?", num1, num2, num3);
-    q.timeLimit = 28;
-    return q;
-}
-
-// LEVEL 9: Sangat Sulit
-Question generateLevel9() {
+// LEVEL 7: Sangat Sulit - sebelumnya level 9
+Question generateLevel7() {
     Question q;
     int num1 = generateRandomNumber(50, 100);
-    int num2 = generateRandomNumber(2, 9); // Pembagi kecil
-    int num3 = generateRandomNumber(2, 5); // Pangkat kecil
+    int num2 = generateRandomNumber(2, 9);
+    int num3 = generateRandomNumber(2, 5);
     
     q.num1 = num1;
     q.num2 = num2;
     q.num3 = num3;
     
-    // Pastikan pembagian menghasilkan bilangan bulat
     while (num1 % num2 != 0) {
         num1 = generateRandomNumber(50, 100);
         num2 = generateRandomNumber(2, 9);
@@ -308,18 +203,16 @@ Question generateLevel9() {
     }
     
     q.correctAnswer = divisionResult * powerResult;
-    sprintf(q.questionText, "%d ÷ %d × %d² = ?", num1, num2, num3);
-    q.timeLimit = 30;
+    sprintf(q.questionText, "%d / %d * %d^2 = ?", num1, num2, num3);
     return q;
 }
 
-// LEVEL 10: Expert
-Question generateLevel10() {
+// LEVEL 8: Expert - sebelumnya level 10
+Question generateLevel8() {
     Question q;
     int num1 = generateRandomNumber(100, 200);
-    int num2 = generateRandomNumber(2, 5); // Pangkat 3 kecil
+    int num2 = generateRandomNumber(2, 5);
     
-    // Pastikan num1 adalah bilangan kuadrat sempurna
     int root = (int)sqrt(num1);
     while (root * root != num1) {
         num1 = generateRandomNumber(100, 200);
@@ -333,19 +226,17 @@ Question generateLevel10() {
     int cubeResult = num2 * num2 * num2;
     
     q.correctAnswer = sqrtResult + cubeResult;
-    sprintf(q.questionText, "√%d + %d³ = ?", num1, num2);
-    q.timeLimit = 32;
+    sprintf(q.questionText, "sqrt(%d) + %d^3 = ?", num1, num2);
     return q;
 }
 
-// LEVEL 11: Master
-Question generateLevel11() {
+// LEVEL 9: Master - sebelumnya level 11
+Question generateLevel9() {
     Question q;
-    int num1 = generateRandomNumber(2, 5); // Basis pangkat 3
-    int num2 = generateRandomNumber(2, 6); // Pengali
-    int num3 = generateRandomNumber(1, 100); // Untuk akar
+    int num1 = generateRandomNumber(2, 5);
+    int num2 = generateRandomNumber(2, 6);
+    int num3 = generateRandomNumber(1, 100);
     
-    // Pastikan num3 adalah bilangan kuadrat sempurna
     int root = (int)sqrt(num3);
     while (root * root != num3) {
         num3 = generateRandomNumber(1, 100);
@@ -361,26 +252,23 @@ Question generateLevel11() {
     int sqrtResult = (int)sqrt(num3);
     
     q.correctAnswer = multiplicationResult - sqrtResult;
-    sprintf(q.questionText, "%d³ × %d - √%d = ?", num1, num2, num3);
-    q.timeLimit = 35;
+    sprintf(q.questionText, "%d^3 * %d - sqrt(%d) = ?", num1, num2, num3);
     return q;
 }
 
-// LEVEL 12: Boss Ekstrem
-Question generateLevel12() {
+// LEVEL 10: Boss Ekstrem - sebelumnya level 12
+Question generateLevel10() {
     Question q;
     int num1 = generateRandomNumber(100, 300);
     int num2 = generateRandomNumber(10, 20);
     int num3 = generateRandomNumber(2, 5);
     int num4 = generateRandomNumber(1, 100);
     
-    // Pastikan num1 habis dibagi num2
     while (num1 % num2 != 0) {
         num1 = generateRandomNumber(100, 300);
         num2 = generateRandomNumber(10, 20);
     }
     
-    // Pastikan num4 adalah bilangan kuadrat sempurna
     int root = (int)sqrt(num4);
     while (root * root != num4) {
         num4 = generateRandomNumber(1, 100);
@@ -398,14 +286,13 @@ Question generateLevel12() {
     int sqrtResult = (int)sqrt(num4);
     
     q.correctAnswer = sum * sqrtResult;
-    sprintf(q.questionText, "(%d ÷ %d + %d²) × √%d = ?", num1, num2, num3, num4);
-    q.timeLimit = 45;
+    sprintf(q.questionText, "(%d / %d + %d^2) * sqrt(%d) = ?", num1, num2, num3, num4);
     return q;
 }
 
 // Fungsi utama untuk mendapatkan soal berdasarkan level
 Question generateQuestion(int level) {
-    srand(time(NULL)); // Inisialisasi seed random
+    srand(time(NULL));
     
     switch(level) {
         case 1: return generateLevel1();
@@ -418,8 +305,6 @@ Question generateQuestion(int level) {
         case 8: return generateLevel8();
         case 9: return generateLevel9();
         case 10: return generateLevel10();
-        case 11: return generateLevel11();
-        case 12: return generateLevel12();
-        default: return generateLevel1(); // Default ke level 1
+        default: return generateLevel1();
     }
 }
