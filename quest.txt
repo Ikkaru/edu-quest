@@ -68,10 +68,10 @@ A: Dina lebih pintar dari Fira
 B: Fira lebih pintar dari Dina
 C: Dina sama pintar dengan Fira
 ---
-QUESTION: Semua mahasiswa Informatika suka coding. Ayu adalah mahasiswa Informatika. Maka...
-A: Ayu suka coding
-B: Ayu tidak suka coding
-C: Ayu mungkin suka coding
+QUESTION: Semua mahasiswa Informatika suka coding. Ikhsan adalah mahasiswa Informatika. Maka...
+A: Ikhsan suka coding
+B: Ikhsan tidak suka coding
+C: Ikhsan mungkin suka coding
 ---
 QUESTION: Semua dosen mengajar. Pak Budi adalah dosen. Maka...
 A: Pak Budi mengajar
