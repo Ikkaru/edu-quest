@@ -4,7 +4,7 @@
     #include "SaveSystem.h"
     #define SAVEDIR "history"
 
-    void saveScore(const char* player_name, char* mode,int score) {
+    void saveScore(const char* player_name, char* mode, int score) {
         char filePath[1000];
 
         // Concatenation File Path with player Name
