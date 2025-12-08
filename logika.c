@@ -3,151 +3,82 @@
 #include <string.h>
 #include <time.h>
 
-static void trim_newline(char *s) {
+static void hapusNewline(char *s) {
     size_t n = strlen(s);
-    if (n > 0 && (s[n-1] == '\n' || s[n-1] == '\r')) s[n-1] = '\0';
+    while (n > 0 && (s[n-1] == '\n' || s[n-1] == '\r')) {
+        s[--n] = '\0';
+    }
 }
 
-// Format quest.txt per blok:
-int load_questions(const char *questFile, Question *questions, int maxQuestions) {
-    FILE *f = fopen(questFile, "r");
-    if (!f) {
-        fprintf(stderr, "Tidak bisa membuka %s\n", questFile);
-        return 0;
-    }
+int muatSoal(const char *namaFile, Soal *daftarSoal, int maksSoal) {
+    FILE *f = fopen(namaFile, "r");
+    if (!f) return 0;
 
-    char line[1024];
-    int count = 0;
-    Question q;
-    int inBlock = 0;
+    char baris[512];
+    int jumlahSoal = 0;
+    Soal s;
+    int dalamBlok = 0;
 
-    while (fgets(line, sizeof(line), f)) {
-        trim_newline(line);
-        if (strncmp(line, "LEVEL:", 6) == 0) {
-            if (count >= maxQuestions) break;
-            memset(&q, 0, sizeof(q));
-            inBlock = 1;
-            q.level = atoi(line + 6);
-        } else if (strncmp(line, "QID:", 4) == 0 && inBlock) {
-            q.qid = atoi(line + 4);
-        } else if (strncmp(line, "QUESTION:", 9) == 0 && inBlock) {
-            strncpy(q.question, line + 9, MAX_TEXT - 1);
-        } else if (strncmp(line, "A:", 2) == 0 && inBlock) {
-            strncpy(q.choiceA, line + 2, MAX_TEXT - 1);
-        } else if (strncmp(line, "B:", 2) == 0 && inBlock) {
-            strncpy(q.choiceB, line + 2, MAX_TEXT - 1);
-        } else if (strncmp(line, "C:", 2) == 0 && inBlock) {
-            strncpy(q.choiceC, line + 2, MAX_TEXT - 1);
-        } else if (strcmp(line, "---") == 0 && inBlock) {
-            // akhir blok
-            questions[count++] = q;
-            inBlock = 0;
+    while (fgets(baris, sizeof(baris), f)) {
+        hapusNewline(baris);
+        if (strncmp(baris, "QUESTION:", 9) == 0) {
+            memset(&s, 0, sizeof(s));
+            dalamBlok = 1;
+            s.nomor = jumlahSoal + 1;
+            strncpy(s.pertanyaan, baris+9, MAKS_TEKST-1);
+        } else if (strncmp(baris, "A:", 2) == 0) {
+            strncpy(s.pilihanA, baris+2, MAKS_TEKST-1);
+        } else if (strncmp(baris, "B:", 2) == 0) {
+            strncpy(s.pilihanB, baris+2, MAKS_TEKST-1);
+        } else if (strncmp(baris, "C:", 2) == 0) {
+            strncpy(s.pilihanC, baris+2, MAKS_TEKST-1);
+        } else if (strcmp(baris, "---") == 0 && dalamBlok) {
+            daftarSoal[jumlahSoal++] = s;
+            dalamBlok = 0;
         }
     }
-
     fclose(f);
-    return count;
+    return jumlahSoal;
 }
 
-// Format answ.txt per baris:
-// LEVEL:<int> QID:<int> ANSWER:<a|b|c>
-int load_answers(const char *answFile, Answer *answers, int maxAnswers) {
-    FILE *f = fopen(answFile, "r");
-    if (!f) {
-        fprintf(stderr, "Tidak bisa membuka %s\n", answFile);
-        return 0;
-    }
+int muatJawaban(const char *namaFile, KunciJawaban *daftarJawaban, int maksJawaban) {
+    FILE *f = fopen(namaFile, "r");
+    if (!f) return 0;
 
-    char line[512];
-    int count = 0;
-
-    while (fgets(line, sizeof(line), f)) {
-        trim_newline(line);
-        if (strlen(line) == 0) continue;
-
-        int level = 0, qid = 0;
-        char ans = 0;
-
-        // parsing sederhana
-        // contoh: LEVEL:1 QID:1 ANSWER:a
-        char *pLevel = strstr(line, "LEVEL:");
-        char *pQid   = strstr(line, "QID:");
-        char *pAns   = strstr(line, "ANSWER:");
-
-        if (pLevel && pQid && pAns) {
-            level = atoi(pLevel + 6);
-            qid   = atoi(pQid + 4);
-            ans   = *(pAns + 7);
-            if (count < maxAnswers) {
-                answers[count].level  = level;
-                answers[count].qid    = qid;
-                answers[count].answer = ans;
-                count++;
-            }
+    char baris[128];
+    int jumlahJawaban = 0;
+    int id; char ans;
+    while (fgets(baris, sizeof(baris), f)) {
+        hapusNewline(baris);
+        if (sscanf(baris, "ID:%d ANSWER:%c", &id, &ans) == 2) {
+            daftarJawaban[jumlahJawaban].nomor = id;
+            daftarJawaban[jumlahJawaban].jawaban = ans;
+            jumlahJawaban++;
         }
     }
-
     fclose(f);
-    return count;
+    return jumlahJawaban;
 }
 
-// Ambil 1 soal acak dari dua soal dalam level
-int battle(int level,
-           const Question *questions, int qCount,
-           const Answer *answers, int aCount,
-           Question *outQ, char *outCorrect) {
-
-    // Kumpulkan dua soal untuk level ini
-    Question levelQuestions[2];
-    int found = 0;
-
-    for (int i = 0; i < qCount; i++) {
-        if (questions[i].level == level) {
-            if (found < 2) {
-                levelQuestions[found++] = questions[i];
-            }
-        }
-    }
-
-    if (found < 2) {
-        fprintf(stderr, "Soal untuk level %d tidak lengkap.\n", level);
-        return 0;
-    }
-
-    // Random pilih 1 dari 2
+int ambilSoalAcak(const Soal *daftarSoal, int jumlahSoal,
+                  const KunciJawaban *daftarJawaban, int jumlahJawaban,
+                  Soal *soalAcak, char *jawabanBenar) {
+    if (jumlahSoal == 0 || jumlahJawaban == 0) return 0;
     srand((unsigned int)time(NULL));
-    int idx = rand() % 2;
-    *outQ = levelQuestions[idx];
+    int idx = rand() % jumlahSoal;
+    *soalAcak = daftarSoal[idx];
 
-    // Cari jawaban yang cocok
-    char correct = 0;
-    for (int j = 0; j < aCount; j++) {
-        if (answers[j].level == outQ->level && answers[j].qid == outQ->qid) {
-            correct = answers[j].answer;
-            break;
+    for (int i=0; i<jumlahJawaban; i++) {
+        if (daftarJawaban[i].nomor == soalAcak->nomor) {
+            *jawabanBenar = daftarJawaban[i].jawaban;
+            return 1;
         }
     }
-
-    if (!correct) {
-        fprintf(stderr, "Jawaban untuk level %d QID %d tidak ditemukan.\n", outQ->level, outQ->qid);
-        return 0;
-    }
-
-    *outCorrect = correct;
-    return 1;
+    return 0;
 }
 
-int check_answer(char userAnswer, char correctAnswer, int *score, int *lives) {
-    // normalisasi ke huruf kecil
-    if (userAnswer >= 'A' && userAnswer <= 'C') {
-        userAnswer = (char)(userAnswer - 'A' + 'a');
-    }
-
-    if (userAnswer == correctAnswer) {
-        *score += 100;
-        return 1;
-    } else {
-        *lives -= 1;
-        return 0;
-    }
+const char* cekJawaban(char jawabanUser, char jawabanBenar) {
+    if (jawabanUser >= 'A' && jawabanUser <= 'C') jawabanUser = jawabanUser - 'A' + 'a';
+    if (jawabanBenar >= 'A' && jawabanBenar <= 'C') jawabanBenar = jawabanBenar - 'A' + 'a';
+    return (jawabanUser == jawabanBenar) ? "BENAR" : "SALAH";
 }
