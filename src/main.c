@@ -9,6 +9,7 @@ int main() {
 
     // Initilize State
     GameState currentState;
+    GameState nextState;
 
     // Initilize Window
     InitWindow(1280, 720, "EduQuest (Debug)");
@@ -31,7 +32,7 @@ int main() {
         switch (currentState)
         {
         case MAIN_MENU:
-            UpdateMainMenu();
+            nextState = UpdateMainMenu();
             break;
         
         default:
@@ -47,14 +48,29 @@ int main() {
                 DrawMainMenu();
             EndDrawing();
             break;
-        
-        default:
-            break;
+        }
+
+        // Cek apakah ada permintaan perubahan state
+        if (nextState != currentState) {
+
+            // Unload memori State Sebelumnya
+            switch (currentState)
+            {
+            case MAIN_MENU: UnloadMainMenu(); break;
+            }
+
+            // Load memori state berikutnya
+            switch (nextState)
+            {
+            case MAIN_MENU: InitMainMenu(); break;
+            case EXIT:
+                CloseWindow();
+                return 0;
+                break;
+            }
         }
         
     }
-
-    UnloadMainMenu();
 
     CloseWindow();
     return 0;
