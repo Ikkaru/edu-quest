@@ -4,6 +4,7 @@
 typedef enum {
     MAIN_MENU,
     GAMEPLAY,
+    SPECIAL_EVENT,
     BATTLE,
     GAME_OVER
 } GameState;
@@ -19,6 +20,7 @@ typedef enum {
 typedef struct
 {   
     GameMode currentMode;
+    int score; 
     int energy;
     int maxEnergy;
     int HP;
