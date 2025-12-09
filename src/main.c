@@ -3,15 +3,14 @@
 #include "mainMenu.h"
 #include "global.h"
 #include "raygui.h"
-
+#include "lobby.h"  // Tambah ini
 
 int main() {
-
-    // Initilize State
+    // Initialize State
     GameState currentState;
     GameState nextState;
 
-    // Initilize Window
+    // Initialize Window
     InitWindow(1280, 720, "EduQuest (Debug)");
     SetTargetFPS(60);
 
@@ -22,8 +21,8 @@ int main() {
     UnloadImage(icon);
 
     InitMainMenu(); 
-
     currentState = MAIN_MENU;
+    nextState = MAIN_MENU;
 
     // Application Logic
     while (!WindowShouldClose())
@@ -34,7 +33,9 @@ int main() {
         case MAIN_MENU:
             nextState = UpdateMainMenu();
             break;
-        
+        case LOBBY:  // Tambah case untuk lobby
+            nextState = UpdateLobby();
+            break;
         default:
             break;
         }
@@ -47,28 +48,35 @@ int main() {
                 DrawMainMenu();
             EndDrawing();
             break;
+        case LOBBY:  // Tambah case untuk lobby
+            BeginDrawing();
+                DrawLobby();
+            EndDrawing();
+            break;
         }
 
         // Cek apakah ada permintaan perubahan state
         if (nextState != currentState) {
-
             // Unload memori State Sebelumnya
             switch (currentState)
             {
             case MAIN_MENU: UnloadMainMenu(); break;
+            case LOBBY: UnloadLobby(); break;  // Tambah untuk lobby
             }
 
             // Load memori state berikutnya
             switch (nextState)
             {
             case MAIN_MENU: InitMainMenu(); break;
+            case LOBBY: InitLobby(); break;  // Tambah untuk lobby
             case EXIT:
                 CloseWindow();
                 return 0;
                 break;
             }
+            
+            currentState = nextState;
         }
-        
     }
 
     CloseWindow();
