@@ -39,7 +39,6 @@ int main() {
             break;
         }
 
-
         // Draw
         switch (currentState)
         {
