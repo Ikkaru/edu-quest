@@ -1,24 +1,26 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "C/C++ Runner: Debug Session",
-      "type": "cppdbg",
-      "request": "launch",
-      "args": [],
-      "stopAtEntry": false,
-      "externalConsole": true,
-      "cwd": "d:/projekKP",
-      "program": "d:/projekKP/build/Debug/outDebug",
-      "MIMode": "gdb",
-      "miDebuggerPath": "gdb",
-      "setupCommands": [
+    "version": "0.2.0",
+    "configurations": [
         {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
+            "name": "Debug Game (F5)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/game_debug.exe", // Harus sama dengan output tasks.json
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}", // PENTING: Agar aset/history terbaca dari root
+            "environment": [],
+            "externalConsole": true,     // True = Muncul terminal hitam (biar bisa lihat printf)
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb",     // Asumsi gdb sudah ada di PATH Windows
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build Game (Debug)" // PENTING: Jalankan task build sebelum debug
         }
-      ]
-    }
-  ]
+    ]
 }
