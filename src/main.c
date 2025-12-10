@@ -34,8 +34,8 @@ int main() {
         case MAIN_MENU:
             nextState = UpdateMainMenu();
             break;
-        
-        default:
+
+        case BATTLE:
             break;
         }
 
@@ -47,6 +47,11 @@ int main() {
                 DrawMainMenu();
             EndDrawing();
             break;
+
+
+
+        case BATTLE:
+            break;
         }
 
         // Cek apakah ada permintaan perubahan state
@@ -56,6 +61,8 @@ int main() {
             switch (currentState)
             {
             case MAIN_MENU: UnloadMainMenu(); break;
+
+            
             }
 
             // Load memori state berikutnya
