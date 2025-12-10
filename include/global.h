@@ -17,6 +17,34 @@ typedef enum {
     LOGIC,
 } GameMode;
 
+// Annimation Data
+typedef struct {
+    Texture2D texture;
+    int frameCount;
+    float frameSpeed;
+    bool loop; // True untuk Idle, False untuk Attack/Hurt
+} AnimationData;
+
+
+// Enemy Annimation
+typedef enum {
+    E_IDLE,
+    E_ATTACK,
+    E_HURT,
+    E_ANIM_COUNT // Total animasi enemy (3)
+} EnemyAnimType;
+
+// Player Annimation
+typedef enum {
+    WALKING,
+    P_IDLE,
+    P_ATTACK_1,
+    P_ATTACK_2,
+    P_ATTACK_3,
+    P_HURT,
+    P_ANIM_COUNT // Total animasi player (6)
+} PlayerAnimType;
+
 // Gamedata
 typedef struct
 {   
@@ -68,31 +96,6 @@ typedef enum
     ULTIMATE,
     SKIP,
 } PlayerChoice;
-
-typedef enum {
-    WALKING,
-    P_IDLE,
-    P_ATTACK_1,
-    P_ATTACK_2,
-    P_ATTACK_3,
-    P_HURT,
-    P_ANIM_COUNT // Total animasi player (5)
-} PlayerAnimType;
-
-typedef enum {
-    E_IDLE,
-    E_ATTACK,
-    E_HURT,
-    E_ANIM_COUNT // Total animasi enemy (3)
-} EnemyAnimType;
-
-typedef struct {
-    Texture2D texture;
-    int frameCount;
-    float frameSpeed;
-    bool loop; // True untuk Idle, False untuk Attack/Hurt
-} AnimationData;
-
 
 extern PlayerData player;
 extern GameState currentState;
