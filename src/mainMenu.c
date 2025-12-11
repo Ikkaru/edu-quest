@@ -101,6 +101,7 @@ void DrawMainMenu() {
                 strcpy(player.name, tempName);
                 loginSuccess = true;
                 showLoginBox = false;
+                return;
             }
             else
             {
@@ -109,36 +110,32 @@ void DrawMainMenu() {
             }
         }
     }
-    // Ketika player Belum Menekan Enter dan belum berhasil login
-    else if (!loginSuccess) {
-        if ((int)(GetTime() * 2) % 2 == 0) {
-            const char text[] = "Press ENTER to Start";
-            int textW = MeasureText(text, 20);
-            DrawText(text, (GetScreenWidth() - textW) / 2, 600, 20, WHITE);
-        }
-    }
-
     // Draw The Text Button
-    if (loginSuccess) {
+    else if (loginSuccess) {
         int gap = 70; // Jarak antar text
         int startY = 350;
         // Tombol Play Game
         const char textPlay[] = "Play Game";
         if (TextButton(textPlay, (GetScreenWidth() - MeasureText(textPlay, 40)) / 2, startY, 40)) {
-<<<<<<< HEAD
-            nextState = BATTLE;
-=======
             nextState = LOBBY;  // Pindah ke lobby
->>>>>>> main
         }
-
         // Tombol Exit
         const char textExit[] = "Exit";
         if(TextButton(textExit, (GetScreenWidth() - MeasureText(textExit, 45)) / 2, startY + gap, 45)) {
             nextState = EXIT;
         }
     }
+    // Ketika player Belum Menekan Enter dan belum berhasil login
+    else {
+        if ((int)(GetTime() * 2) % 2 == 0) {
+            const char text[] = "Press ENTER to Start";
+            int textW = MeasureText(text, 20);
+            DrawText(text, (GetScreenWidth() - textW) / 2, 600, 20, WHITE);
+        }
+    }
+        
 }
+
 
 // Callable button Function
 bool TextButton(const char* text, int x, int y, int fontSize) {
