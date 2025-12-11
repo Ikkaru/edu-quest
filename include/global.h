@@ -4,6 +4,7 @@
 typedef enum {
     MAIN_MENU,
     GAMEPLAY,
+    LOBBY,
     SPECIAL_EVENT,
     BATTLE,
     GAME_OVER,
