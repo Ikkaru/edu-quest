@@ -298,22 +298,20 @@ void DrawScoreHistoryPanel() {
     int listWidth = contentWidth;
     int listHeight = contentHeight - 80; // Sisakan ruang untuk statistik
     
-    // Header tabel - ditengah
+    // Header tabel - ditengah (HANYA 2 KOLOM: Rank dan Score)
     DrawRectangle(listX, listY, listWidth, 40, (Color){50, 50, 60, 220});
     DrawRectangleLinesEx((Rectangle){(float)listX, (float)listY, (float)listWidth, 40.0f}, 
                         2, (Color){100, 100, 120, 150});
     
-    // Hitung posisi teks agar ditengah
-    int col1Center = listX + 60;
-    int col2Center = listX + listWidth/2;
-    int col3Center = listX + listWidth - 60;
+    // Hitung posisi teks agar ditengah - HANYA 2 KOLOM
+    int col1Center = listX + listWidth * 1/4;  // Kolom Rank (25%)
+    int col2Center = listX + listWidth * 3/4;  // Kolom Score (75%)
     
     DrawText("Rank", col1Center - MeasureText("Rank", 22)/2, listY + 10, 22, (Color){220, 220, 255, 255});
     DrawText("Score", col2Center - MeasureText("Score", 22)/2, listY + 10, 22, (Color){220, 220, 255, 255});
-    DrawText("Date", col3Center - MeasureText("Date", 22)/2, listY + 10, 22, (Color){220, 220, 255, 255});
     
     // Tampilkan beberapa skor teratas
-    int maxToShow = 7;
+    int maxToShow = 10; // Bisa menampilkan lebih banyak karena kolom lebih sedikit
     int shownCount = (playerHistoryData.count > maxToShow) ? maxToShow : playerHistoryData.count;
     
     int listStartY = listY + 50;
@@ -334,13 +332,13 @@ void DrawScoreHistoryPanel() {
         DrawRectangleLinesEx((Rectangle){(float)listX, (float)(listStartY + (i * rowHeight)), 
                                         (float)listWidth, (float)rowHeight}, 1, (Color){100, 100, 120, 100});
         
-        // Peringkat - ditengah
+        // Peringkat - ditengah kolom pertama
         char rankText[10];
         snprintf(rankText, sizeof(rankText), "#%d", i + 1);
         int rankWidth = MeasureText(rankText, 20);
         DrawText(rankText, col1Center - rankWidth/2, listStartY + (i * rowHeight) + 8, 20, WHITE);
         
-        // Skor - ditengah (sudah terurut dari terbesar)
+        // Skor - ditengah kolom kedua (sudah terurut dari terbesar)
         char scoreText[20];
         snprintf(scoreText, sizeof(scoreText), "%d", playerHistoryData.scores[i]);
         int scoreWidth = MeasureText(scoreText, 20);
@@ -353,22 +351,6 @@ void DrawScoreHistoryPanel() {
         
         DrawText(scoreText, col2Center - scoreWidth/2, listStartY + (i * rowHeight) + 8, 20, scoreColor);
         
-        // Tanggal dummy - ditengah
-        const char* dateText = "Today";
-        int dateWidth = MeasureText(dateText, 20);
-        DrawText(dateText, col3Center - dateWidth/2, listStartY + (i * rowHeight) + 8, 20, (Color){180, 180, 180, 255});
-        
-        // Emoji berdasarkan peringkat
-        if (i == 0) {
-            const char* trophy = "🥇";
-            DrawText(trophy, listX + listWidth - 30, listStartY + (i * rowHeight) + 5, 25, GOLD);
-        } else if (i == 1) {
-            const char* silverMedal = "🥈";
-            DrawText(silverMedal, listX + listWidth - 30, listStartY + (i * rowHeight) + 5, 25, SILVER);
-        } else if (i == 2) {
-            const char* bronzeMedal = "🥉";
-            DrawText(bronzeMedal, listX + listWidth - 30, listStartY + (i * rowHeight) + 5, 25, (Color){205, 127, 50, 255});
-        }
     }
     
     // Statistik di bagian bawah
@@ -391,7 +373,7 @@ void DrawScoreHistoryPanel() {
         DrawRectangleLinesEx((Rectangle){(float)listX, (float)statsY, (float)listWidth, 80.0f}, 
                             2, (Color){100, 100, 120, 150});
         
-        // Gambar statistik - ditengah
+        // Gambar statistik - ditengah (4 kolom statistik)
         char statsText[4][50];
         snprintf(statsText[0], sizeof(statsText[0]), "Total: %d", playerHistoryData.count);
         snprintf(statsText[1], sizeof(statsText[1]), "Avg: %.1f", average);
