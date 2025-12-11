@@ -37,6 +37,11 @@ int main() {
             nextState = UpdateMainMenu();
             break;
 
+
+
+
+
+        
         case BATTLE:
             Battle(player.stage);
             break;
