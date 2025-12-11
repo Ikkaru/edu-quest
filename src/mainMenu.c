@@ -125,7 +125,11 @@ void DrawMainMenu() {
         // Tombol Play Game
         const char textPlay[] = "Play Game";
         if (TextButton(textPlay, (GetScreenWidth() - MeasureText(textPlay, 40)) / 2, startY, 40)) {
+<<<<<<< HEAD
+            nextState = BATTLE;
+=======
             nextState = LOBBY;  // Pindah ke lobby
+>>>>>>> main
         }
 
         // Tombol Exit

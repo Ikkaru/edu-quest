@@ -1,6 +1,8 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raylib.h"
 #include "mainMenu.h"
+#include "battle.h"
+#include "animation.h"
 #include "global.h"
 #include "raygui.h"
 #include "lobby.h"  // Tambah ini
