@@ -34,4 +34,24 @@ void ResetEnemyToIdle(Enemy* enemy);
 void InitPlayerAnimations();
 
 // Initialize animation data for enemy (call when spawning enemy)
-void InitEnemyAnimations(Enemy* enemy);
+void InitEnemyAnimations(Enemy* enemy, int stage);
+
+// --- TEXTURE LOADING ---
+// Load player animation texture (spritesheet)
+void LoadPlayerAnimationTexture(PlayerAnimType animType, const char* texturePath, int frameCount, float frameSpeed, bool loop);
+
+// Load enemy animation texture (spritesheet)
+void LoadEnemyAnimationTexture(Enemy* enemy, EnemyAnimType animType, const char* texturePath, int frameCount, float frameSpeed, bool loop);
+
+// Unload all player animation textures
+void UnloadPlayerAnimations();
+
+// Unload all enemy animation textures
+void UnloadEnemyAnimations(Enemy* enemy);
+
+// --- DRAWING ---
+// Draw player sprite with current animation
+void DrawPlayerSprite(int x, int y, float scale);
+
+// Draw enemy sprite with current animation
+void DrawEnemySprite(Enemy* enemy, int x, int y, float scale);

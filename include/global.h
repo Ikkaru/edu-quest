@@ -6,7 +6,6 @@ typedef enum {
     LOBBY,
     GAMEPLAY,
     BATTLE,
-    SPECIAL_EVENT,
     GAME_OVER,
     EXIT
 } GameState;
@@ -31,17 +30,19 @@ typedef enum {
     E_IDLE,
     E_ATTACK,
     E_HURT,
-    E_ANIM_COUNT // Total animasi enemy (3)
+    E_DEATH,
+    E_ANIM_COUNT // Total animasi enemy (4)
 } EnemyAnimType;
 
 // Player Annimation
 typedef enum {
     WALKING,
     P_IDLE,
-    P_ATTACK_1,
-    P_ATTACK_2,
-    P_ATTACK_3,
+    P_BASIC_ATTACK,
+    P_SKILL,
+    P_ULTIMATE,
     P_HURT,
+    P_DEATH,
     P_ANIM_COUNT // Total animasi player (6)
 } PlayerAnimType;
 
@@ -72,7 +73,6 @@ typedef struct
     int maxHP;
     int HP;
     int damage;
-    char texture[100];
 
     AnimationData anims[E_ANIM_COUNT]; // Array menyimpan 3 animasi
     int currentAnim;
@@ -90,7 +90,8 @@ typedef enum
 } BattleState;
 
 typedef enum
-{
+{   
+    NOT_SELECTED,
     BASIC_ATTACK,
     SKILL,
     ULTIMATE,
@@ -100,5 +101,6 @@ typedef enum
 extern PlayerData player;
 extern GameState currentState;
 extern Enemy enemies[10];
+extern Enemy currentEnemy;
 extern BattleState currentBattleState;
 extern PlayerChoice playerChoice; 

@@ -1,6 +1,7 @@
 #include "animation.h"
 #include "global.h"
 #include <string.h>
+#include <stdio.h>
 
 // ==================== PLAYER ANIMATION FUNCTIONS ====================
 
@@ -116,62 +117,152 @@ void ResetEnemyToIdle(Enemy* enemy) {
 // ==================== ANIMATION INITIALIZATION ====================
 
 void InitPlayerAnimations() {
-    // Setup default values (you'll replace with actual texture loading)
-    
-    // WALKING animation (example: 6 frames, 0.1s per frame, loop)
-    player.anims[WALKING].frameCount = 6;
-    player.anims[WALKING].frameSpeed = 0.1f;
-    player.anims[WALKING].loop = true;
-    
-    // IDLE animation (example: 4 frames, 0.15s per frame, loop)
-    player.anims[P_IDLE].frameCount = 4;
-    player.anims[P_IDLE].frameSpeed = 0.15f;
-    player.anims[P_IDLE].loop = true;
-    
-    // ATTACK_1 animation (example: 5 frames, 0.08s per frame, no loop)
-    player.anims[P_ATTACK_1].frameCount = 5;
-    player.anims[P_ATTACK_1].frameSpeed = 0.08f;
-    player.anims[P_ATTACK_1].loop = false;
-    
-    // ATTACK_2 animation (Skill)
-    player.anims[P_ATTACK_2].frameCount = 6;
-    player.anims[P_ATTACK_2].frameSpeed = 0.1f;
-    player.anims[P_ATTACK_2].loop = false;
-    
-    // ATTACK_3 animation (Ultimate)
-    player.anims[P_ATTACK_3].frameCount = 8;
-    player.anims[P_ATTACK_3].frameSpeed = 0.12f;
-    player.anims[P_ATTACK_3].loop = false;
-    
-    // HURT animation
-    player.anims[P_HURT].frameCount = 3;
-    player.anims[P_HURT].frameSpeed = 0.1f;
-    player.anims[P_HURT].loop = false;
-    
+    // Initialize with default empty values
+    // Use LoadPlayerAnimationTexture() to load actual sprites
+    LoadPlayerAnimationTexture(P_IDLE, "assets/Player/Player_Idle.png", 4, 0.15f, true);
+    LoadPlayerAnimationTexture(P_BASIC_ATTACK, "assets/Player/Player_BasicAttack.png", 5, 0.15f, false);
+    LoadPlayerAnimationTexture(P_SKILL, "assets/Player/Player_Skill.png", 6, 0.15f, false);
+    LoadPlayerAnimationTexture(P_ULTIMATE, "assets/Player/Player_Ultimate.png", 8, 0.15f, false);
+    LoadPlayerAnimationTexture(P_HURT, "assets/Player/Player_Hurt.png", 3, 0.15f, false);
+    LoadPlayerAnimationTexture(P_DEATH, "assets/Player/Player_Death.png", 6, 0.15f, false);
     // Start with IDLE animation
     PlayPlayerAnimation(P_IDLE, true);
 }
 
-void InitEnemyAnimations(Enemy* enemy) {
+void InitEnemyAnimations(Enemy* enemy, int stage) {
     if (!enemy) return;
     
-    // Setup default values for enemy animations
+    char filepathIdle[100];
+    char filepathAttack[100];
+    char filepathHurt[100];
+    char filepathDeath[100];
+
+    // Enemy Texture Annimation file path
+    sprintf(filepathIdle, "assets/Enemy%d/Enemy%d_Idle.png", stage, stage);
+    sprintf(filepathAttack, "assets/Enemy%d/Enemy%d_Attack.png", stage, stage);
+    sprintf(filepathHurt, "assets/Enemy%d/Enemy%d_Hurt.png", stage, stage);
+    sprintf(filepathDeath, "assets/Enemy%d/Enemy%d_Death.png", stage, stage); 
     
-    // IDLE animation
-    enemy->anims[E_IDLE].frameCount = 4;
-    enemy->anims[E_IDLE].frameSpeed = 0.2f;
-    enemy->anims[E_IDLE].loop = true;
-    
-    // ATTACK animation
-    enemy->anims[E_ATTACK].frameCount = 5;
-    enemy->anims[E_ATTACK].frameSpeed = 0.1f;
-    enemy->anims[E_ATTACK].loop = false;
-    
-    // HURT animation
-    enemy->anims[E_HURT].frameCount = 2;
-    enemy->anims[E_HURT].frameSpeed = 0.1f;
-    enemy->anims[E_HURT].loop = false;
+    // Initialize with default empty values
+    // Use LoadEnemyAnimationTexture() to load actual sprites
+    LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 6, 0.15f, true);
+    LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 5, 0.15f, false);
+    LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 2, 0.15f, false);
+    LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 6, 0.15f, false);
+
     
     // Start with IDLE
     PlayEnemyAnimation(enemy, E_IDLE);
+}
+
+// ==================== TEXTURE LOADING ====================
+
+void LoadPlayerAnimationTexture(PlayerAnimType animType, const char* texturePath, int frameCount, float frameSpeed, bool loop) {
+    // Load texture from file
+    player.anims[animType].texture = LoadTexture(texturePath);
+    player.anims[animType].frameCount = frameCount;
+    player.anims[animType].frameSpeed = frameSpeed;
+    player.anims[animType].loop = loop;
+    
+    // Optional: Set texture filter for pixel art
+    SetTextureFilter(player.anims[animType].texture, TEXTURE_FILTER_POINT);
+}
+
+void LoadEnemyAnimationTexture(Enemy* enemy, EnemyAnimType animType, const char* texturePath, int frameCount, float frameSpeed, bool loop) {
+    if (!enemy) return;
+    
+    // Load texture from file
+    enemy->anims[animType].texture = LoadTexture(texturePath);
+    enemy->anims[animType].frameCount = frameCount;
+    enemy->anims[animType].frameSpeed = frameSpeed;
+    enemy->anims[animType].loop = loop;
+    
+    // Optional: Set texture filter for pixel art
+    SetTextureFilter(enemy->anims[animType].texture, TEXTURE_FILTER_POINT);
+}
+
+void UnloadPlayerAnimations() {
+    // Unload all loaded textures
+    for (int i = 0; i < P_ANIM_COUNT; i++) {
+        if (player.anims[i].texture.id != 0) {
+            UnloadTexture(player.anims[i].texture);
+            player.anims[i].texture.id = 0;
+        }
+    }
+}
+
+void UnloadEnemyAnimations(Enemy* enemy) {
+    if (!enemy) return;
+    
+    // Unload all loaded textures
+    for (int i = 0; i < E_ANIM_COUNT; i++) {
+        if (enemy->anims[i].texture.id != 0) {
+            UnloadTexture(enemy->anims[i].texture);
+            enemy->anims[i].texture.id = 0;
+        }
+    }
+}
+
+// ==================== DRAWING FUNCTIONS ====================
+
+void DrawPlayerSprite(int x, int y, float scale) {
+    AnimationData* anim = &player.anims[player.currentAnim];
+    
+    // Check if texture loaded and has frames
+    if (anim->texture.id == 0 || anim->frameCount == 0) return;
+    
+    // Calculate frame dimensions
+    int frameWidth = anim->texture.width / anim->frameCount;
+    int frameHeight = anim->texture.height;
+    
+    // Source rectangle (which frame to draw from spritesheet)
+    Rectangle source = {
+        player.currentFrame * frameWidth,  // X offset
+        0,                                  // Y offset
+        frameWidth,                         // Width of 1 frame
+        frameHeight                         // Height
+    };
+    
+    // Destination rectangle (where to draw on screen)
+    Rectangle dest = {
+        x,                          // X position
+        y,                          // Y position
+        frameWidth * scale,         // Scaled width
+        frameHeight * scale         // Scaled height
+    };
+    
+    // Draw the sprite
+    DrawTexturePro(anim->texture, source, dest, (Vector2){0, 0}, 0.0f, WHITE);
+}
+
+void DrawEnemySprite(Enemy* enemy, int x, int y, float scale) {
+    if (!enemy) return;
+    
+    AnimationData* anim = &enemy->anims[enemy->currentAnim];
+    
+    // Check if texture loaded and has frames
+    if (anim->texture.id == 0 || anim->frameCount == 0) return;
+    
+    // Calculate frame dimensions
+    int frameWidth = anim->texture.width / anim->frameCount;
+    int frameHeight = anim->texture.height;
+    
+    // Source rectangle (which frame to draw from spritesheet)
+    Rectangle source = {
+        enemy->currentFrame * frameWidth,  // X offset
+        0,                                  // Y offset
+        frameWidth,                         // Width of 1 frame
+        frameHeight                         // Height
+    };
+    
+    // Destination rectangle (where to draw on screen)
+    Rectangle dest = {
+        x,                          // X position
+        y,                          // Y position
+        frameWidth * scale,         // Scaled width
+        frameHeight * scale         // Scaled height
+    };
+    
+    // Draw the sprite
+    DrawTexturePro(anim->texture, source, dest, (Vector2){0, 0}, 0.0f, WHITE);
 }

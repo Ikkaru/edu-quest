@@ -291,17 +291,36 @@ void BattleUpdate(Enemy* enemy) {
 
 ## 🚀 Quick Start
 
-**Minimal code untuk test animasi:**
+### **Langkah 1: Load Texture Sprite Sheets**
 ```c
-// 1. Init (sekali)
+// Di InitBattle() atau InitGame()
 InitPlayerAnimations();
-InitEnemyAnimations(&enemies[0]);
 
+// Load sprite sheets untuk setiap animasi
+LoadPlayerAnimationTexture(P_IDLE, "assets/player/idle.png", 4, 0.15f, true);
+LoadPlayerAnimationTexture(P_ATTACK_1, "assets/player/attack1.png", 5, 0.08f, false);
+LoadPlayerAnimationTexture(P_ATTACK_2, "assets/player/attack2.png", 6, 0.1f, false);
+LoadPlayerAnimationTexture(P_ATTACK_3, "assets/player/attack3.png", 8, 0.12f, false);
+LoadPlayerAnimationTexture(P_HURT, "assets/player/hurt.png", 3, 0.1f, false);
+
+// Load enemy animations
+Enemy* enemy = &enemies[0];
+InitEnemyAnimations(enemy);
+LoadEnemyAnimationTexture(enemy, E_IDLE, "assets/enemy/idle.png", 4, 0.2f, true);
+LoadEnemyAnimationTexture(enemy, E_ATTACK, "assets/enemy/attack.png", 5, 0.1f, false);
+LoadEnemyAnimationTexture(enemy, E_HURT, "assets/enemy/hurt.png", 2, 0.1f, false);
+```
+
+### **Langkah 2: Update Animasi (Game Loop)**
+```c
 // 2. Game loop (setiap frame)
 float dt = GetFrameTime();
 UpdatePlayerAnimation(dt);
 UpdateEnemyAnimation(&enemies[0], dt);
+```
 
+### **Langkah 3: Trigger Animasi**
+```c
 // 3. Trigger animasi (kapan saja)
 if (IsKeyPressed(KEY_SPACE)) {
     PlayPlayerAnimation(P_ATTACK_1, false);
@@ -311,6 +330,99 @@ if (IsKeyPressed(KEY_SPACE)) {
 if (IsPlayerAnimationFinished()) {
     ResetPlayerToIdle();
 }
+```
+
+### **Langkah 4: Cleanup (Exit Game)**
+```c
+// Di UnloadBattle() atau CloseGame()
+UnloadPlayerAnimations();
+UnloadEnemyAnimations(&enemies[0]);
+```
+
+---
+
+## 🖼️ TEXTURE LOADING
+
+### **`LoadPlayerAnimationTexture()`**
+**Fungsi:** Load spritesheet untuk animasi player  
+**Parameter:**
+- `animType`: Jenis animasi (P_IDLE, P_ATTACK_1, dll)
+- `texturePath`: Path ke file sprite sheet
+- `frameCount`: Jumlah frame dalam sprite sheet
+- `frameSpeed`: Durasi per frame (detik)
+- `loop`: true = loop, false = play once
+
+**Contoh:**
+```c
+// IDLE: 4 frames, 0.15s per frame, loop
+LoadPlayerAnimationTexture(P_IDLE, "assets/player/idle.png", 4, 0.15f, true);
+
+// ATTACK: 5 frames, 0.08s per frame, no loop
+LoadPlayerAnimationTexture(P_ATTACK_1, "assets/player/attack.png", 5, 0.08f, false);
+```
+
+---
+
+### **`LoadEnemyAnimationTexture()`**
+**Fungsi:** Load spritesheet untuk animasi enemy
+
+**Contoh:**
+```c
+Enemy* slime = &enemies[0];
+LoadEnemyAnimationTexture(slime, E_IDLE, "assets/slime/idle.png", 4, 0.2f, true);
+LoadEnemyAnimationTexture(slime, E_ATTACK, "assets/slime/attack.png", 5, 0.1f, false);
+```
+
+---
+
+### **`UnloadPlayerAnimations()` & `UnloadEnemyAnimations()`**
+**Fungsi:** Unload semua texture (panggil saat exit game)
+
+**Contoh:**
+```c
+// Saat exit battle atau close game
+UnloadPlayerAnimations();
+UnloadEnemyAnimations(&enemies[0]);
+```
+
+---
+
+## 📐 Format Sprite Sheet
+
+Sprite sheet harus **horizontal strip** (semua frame dalam 1 baris):
+
+```
+[Frame 0][Frame 1][Frame 2][Frame 3]
+```
+
+**Contoh:**
+- `idle.png` = 4 frame @ 32x32 → Total size: 128x32
+- `attack.png` = 5 frame @ 48x48 → Total size: 240x48
+
+**Drawing sprite (nanti kamu implementasikan):**
+```c
+// Calculate source rectangle
+int frameWidth = player.anims[player.currentAnim].texture.width / 
+                 player.anims[player.currentAnim].frameCount;
+int frameHeight = player.anims[player.currentAnim].texture.height;
+
+Rectangle source = {
+    player.currentFrame * frameWidth,  // X offset
+    0,                                  // Y offset
+    frameWidth,                         // Width
+    frameHeight                         // Height
+};
+
+Rectangle dest = { playerX, playerY, frameWidth * 2, frameHeight * 2 };
+
+DrawTexturePro(
+    player.anims[player.currentAnim].texture,
+    source,
+    dest,
+    (Vector2){0, 0},
+    0.0f,
+    WHITE
+);
 ```
 
 ---

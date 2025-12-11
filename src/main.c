@@ -1,6 +1,8 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raylib.h"
 #include "mainMenu.h"
+#include "battle.h"
+#include "animation.h"
 #include "global.h"
 #include "raygui.h"
 
@@ -36,6 +38,7 @@ int main() {
             break;
 
         case BATTLE:
+            Battle(player.stage);
             break;
         }
 
@@ -48,9 +51,10 @@ int main() {
             EndDrawing();
             break;
 
-
-
         case BATTLE:
+            BeginDrawing();
+                DrawBattleGUI();
+            EndDrawing();
             break;
         }
 
@@ -61,7 +65,6 @@ int main() {
             switch (currentState)
             {
             case MAIN_MENU: UnloadMainMenu(); break;
-
             
             }
 
@@ -69,6 +72,7 @@ int main() {
             switch (nextState)
             {
             case MAIN_MENU: InitMainMenu(); break;
+            case BATTLE: currentState = BATTLE; InitPlayerAnimations(); InitEnemyAnimations(&enemies[player.stage-1], player.stage); break;
             case EXIT:
                 CloseWindow();
                 return 0;
