@@ -64,6 +64,7 @@ int main() {
             {
             case MAIN_MENU: UnloadMainMenu(); break;
             case LOBBY: UnloadLobby(); break;  // Tambah untuk lobby
+            case BATTLE: break;
             }
 
             // Load memori state berikutnya
@@ -71,6 +72,7 @@ int main() {
             {
             case MAIN_MENU: InitMainMenu(); break;
             case LOBBY: InitLobby(); break;  // Tambah untuk lobby
+            case BATTLE: InitPlayerAnimations(); InitEnemyAnimations(&enemies[player.stage - 1], player.stage); break;
             case EXIT:
                 CloseWindow();
                 return 0;
