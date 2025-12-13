@@ -7,7 +7,7 @@ PlayerData player = {
     .energy = 3,
     .maxEnergy = 3,
     .score = 100,
-    .stage = 1
+    .stage = 10
 };
 
 Enemy enemies[MAX_ENEMIES] = {

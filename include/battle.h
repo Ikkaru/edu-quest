@@ -15,6 +15,7 @@ void DrawQuizInterface(int screenW, int screenH);
 // Internal functions
 void DrawHealthBar(int x, int y, int currentHP, int maxHP, int width, Color barColor, const char* label);
 void ExecutePlayerDamage(bool iscorrect);
+void ExecuteEnemyDamage(bool iscorrect);
 bool IsAnswerCorrect();
 void DrawTurnIndicator();
 
