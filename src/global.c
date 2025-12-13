@@ -11,16 +11,16 @@ PlayerData player = {
 };
 
 Enemy enemies[MAX_ENEMIES] = {
-    {"Slime", 80, 80, 30},
-    {"FireSlime", 80, 80, 35},
-    {"Plant", 80, 80, 40},
-    {"Orc", 100, 100, 40},
-    {"HighOrc", 120, 120, 45},
-    {"Skeleton", 100, 100, 50},
-    {"Werewolf", 150, 150, 60},
-    {"FireWizard", 200, 200, 70},
-    {"DarkWizard", 250, 250, 80},
-    {"Minotaur", 300, 300, 100}
+    {"Slime", 50, 50, 20},
+    {"Goblin", 80, 80, 25},
+    {"Plant", 80, 80, 28},
+    {"Water Slime", 100, 100, 30},
+    {"High Goblin", 120, 120, 35},
+    {"Vampire", 100, 100, 38},
+    {"Fire Plant", 130, 130, 40},
+    {"Fire Slime", 150, 150, 41},
+    {"Empror Goblin", 250, 250, 43},
+    {"Demon King", 300, 300, 50}
 };
 
 Enemy currentEnemy;

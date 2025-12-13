@@ -1,6 +1,7 @@
 #include "logika.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <time.h>
 
 static void hapusNewline(char *s) {
@@ -77,8 +78,8 @@ int ambilSoalAcak(const Soal *daftarSoal, int jumlahSoal,
     return 0;
 }
 
-const char* cekJawaban(char jawabanUser, char jawabanBenar) {
+const bool cekJawaban(char jawabanUser, char jawabanBenar) {
     if (jawabanUser >= 'A' && jawabanUser <= 'C') jawabanUser = jawabanUser - 'A' + 'a';
     if (jawabanBenar >= 'A' && jawabanBenar <= 'C') jawabanBenar = jawabanBenar - 'A' + 'a';
-    return (jawabanUser == jawabanBenar) ? "BENAR" : "SALAH";
+    return (jawabanUser == jawabanBenar) ? true : false;
 }

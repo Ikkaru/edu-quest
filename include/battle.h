@@ -10,9 +10,24 @@ GameState UpdateBattle();
 
 // Draw battle UI
 void DrawBattleGUI();
-
+void DrawQuizInterface(int screenW, int screenH);
 
 // Internal functions
-void BasicAttack();
 void DrawHealthBar(int x, int y, int currentHP, int maxHP, int width, Color barColor, const char* label);
-void Battle(int stage);
+void ExecutePlayerDamage(bool iscorrect);
+bool IsAnswerCorrect();
+void DrawTurnIndicator();
+
+
+// Floating Damage Text System
+typedef struct
+{
+    char text[20];
+    float x, y;
+    float alpha;
+    float lifetime;
+    Color color;
+    bool active;
+} DamageText;
+
+extern DamageText damageText;

@@ -2,6 +2,7 @@
 #define LOGIKA_H
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #define MAKS_SOAL 200
 #define MAKS_TEKST 256
@@ -31,6 +32,6 @@ int ambilSoalAcak(const Soal *daftarSoal, int jumlahSoal,
                   Soal *soalAcak, char *jawabanBenar);
 
 // Cek jawaban user → return string "BENAR" atau "SALAH"
-const char* cekJawaban(char jawabanUser, char jawabanBenar);
+const bool cekJawaban(char jawabanUser, char jawabanBenar);
 
 #endif
