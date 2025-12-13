@@ -23,7 +23,7 @@ int main() {
     UnloadImage(icon);
 
     InitMainMenu(); 
-    currentState = MAIN_MENU;
+    currentState = MAIN_MENU; // FOR TESTING INGETIN GUE BUAT UBAH
     nextState = MAIN_MENU;
 
     // Application Logic
@@ -38,6 +38,11 @@ int main() {
         case LOBBY:  // Tambah case untuk lobby
             nextState = UpdateLobby();
             break;
+
+        case BATTLE:
+            nextState = UpdateBattle();
+            break;
+
         default:
             break;
         }
@@ -49,10 +54,16 @@ int main() {
             BeginDrawing();
                 DrawMainMenu();
             EndDrawing();
-            break;
+            break;  
         case LOBBY:  // Tambah case untuk lobby
             BeginDrawing();
                 DrawLobby();
+            EndDrawing();
+            break;
+
+        case BATTLE:
+            BeginDrawing();
+                DrawBattleGUI();
             EndDrawing();
             break;
         }
@@ -72,7 +83,7 @@ int main() {
             {
             case MAIN_MENU: InitMainMenu(); break;
             case LOBBY: InitLobby(); break;  // Tambah untuk lobby
-            case BATTLE: InitPlayerAnimations(); InitEnemyAnimations(&enemies[player.stage - 1], player.stage); break;
+            case BATTLE: InitBattle(player.stage); break;
             case EXIT:
                 CloseWindow();
                 return 0;

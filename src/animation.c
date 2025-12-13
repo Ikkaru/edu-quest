@@ -119,12 +119,12 @@ void ResetEnemyToIdle(Enemy* enemy) {
 void InitPlayerAnimations() {
     // Initialize with default empty values
     // Use LoadPlayerAnimationTexture() to load actual sprites
-    LoadPlayerAnimationTexture(P_IDLE, "assets/Player/Player_Idle.png", 4, 0.15f, true);
-    LoadPlayerAnimationTexture(P_BASIC_ATTACK, "assets/Player/Player_BasicAttack.png", 5, 0.15f, false);
-    LoadPlayerAnimationTexture(P_SKILL, "assets/Player/Player_Skill.png", 6, 0.15f, false);
-    LoadPlayerAnimationTexture(P_ULTIMATE, "assets/Player/Player_Ultimate.png", 8, 0.15f, false);
-    LoadPlayerAnimationTexture(P_HURT, "assets/Player/Player_Hurt.png", 3, 0.15f, false);
-    LoadPlayerAnimationTexture(P_DEATH, "assets/Player/Player_Death.png", 6, 0.15f, false);
+    LoadPlayerAnimationTexture(P_IDLE, "assets/Player/Player_Idle.png", 10, 0.15f, true);
+    LoadPlayerAnimationTexture(P_BASIC_ATTACK, "assets/Player/Player_BasicAttack.png", 6, 0.0856f, false);
+    LoadPlayerAnimationTexture(P_SKILL, "assets/Player/Player_Skill.png", 4, 0.1f, false);
+    LoadPlayerAnimationTexture(P_ULTIMATE, "assets/Player/Player_Ultimate.png", 10, 0.1f, false);
+    LoadPlayerAnimationTexture(P_HURT, "assets/Player/Player_Hurt.png", 1, 0.5f, false);
+    LoadPlayerAnimationTexture(P_DEATH, "assets/Player/Player_Death.png", 10, 0.15f, false);
     // Start with IDLE animation
     PlayPlayerAnimation(P_IDLE, true);
 }
@@ -145,10 +145,74 @@ void InitEnemyAnimations(Enemy* enemy, int stage) {
     
     // Initialize with default empty values
     // Use LoadEnemyAnimationTexture() to load actual sprites
-    LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 6, 0.15f, true);
-    LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 5, 0.15f, false);
-    LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 2, 0.15f, false);
-    LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 6, 0.15f, false);
+    switch (stage)
+    {
+    case 1:
+        LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 6, 0.15f, true);
+        LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 10, 0.12f, false);
+        LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 5, 0.056f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 10, 0.11f, false);
+        break;
+    case 2:
+        LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 4, 0.15f, true);
+        LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 8, 0.12f, false);
+        LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 6, 0.056f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 8, 0.11f, false);
+        break;
+    case 3:
+        LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 4, 0.1f, true);
+        LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 7, 0.12f, false);
+        LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 5, 0.056f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 10, 0.11f, false);
+        break;
+    case 4:
+        LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 6, 0.15f, true);
+        LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 10, 0.12f, false);
+        LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 5, 0.056f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 10, 0.11f, false);
+        break;
+    case 5:
+        LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 4, 0.1f, true);
+        LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 8, 0.12f, false);
+        LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 6, 0.056f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 8, 0.11f, false);
+        break;
+    case 6:
+        LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 4, 0.1f, true);
+        LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 12, 0.12f, false);
+        LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 4, 0.056f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 11, 0.11f, false);
+        break;
+    case 7:
+        LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 4, 0.1f, true);
+        LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 7, 0.12f, false);
+        LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 5, 0.056f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 10, 0.11f, false);
+        break;
+    case 8:
+        LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 6, 0.15f, true);
+        LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 10, 0.12f, false);
+        LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 5, 0.056f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 10, 0.11f, false);
+        break;
+    case 9:
+        LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 4, 0.1f, true);
+        LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 8, 0.12f, false);
+        LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 6, 0.056f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 8, 0.15f, false);
+        break;
+    case 10:
+        LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 4, 0.1f, true);
+        LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 12, 0.12f, false);
+        LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 4, 0.056f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 10, 0.11f, false);
+        break;
+    
+    default:
+        break;
+    }
+
+
 
     
     // Start with IDLE
