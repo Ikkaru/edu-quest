@@ -284,6 +284,7 @@ GameState UpdateBattle() {
             if (fadeComplete) {
                 if (IsKeyPressed(KEY_ENTER)) {
                     nextGameState = MAIN_MENU;
+                    player.stage = 0;
                 }
             }
 
@@ -304,6 +305,7 @@ GameState UpdateBattle() {
             if (fadeComplete) {
                 if (IsKeyPressed(KEY_ENTER)) {
                     nextGameState = MAIN_MENU;
+                    player.stage = 0;
                 }
             }
             break;

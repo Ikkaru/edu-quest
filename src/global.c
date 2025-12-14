@@ -8,6 +8,7 @@ PlayerData player = {
     .maxEnergy = 3,
     .score = 0,
     .stage = 0,
+    .maxStage = 10,
     .currentMode = MATH
 };
 

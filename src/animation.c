@@ -206,7 +206,7 @@ void InitEnemyAnimations(Enemy* enemy, int stage) {
         LoadEnemyAnimationTexture(enemy, E_IDLE, filepathIdle, 4, 0.1f, true);
         LoadEnemyAnimationTexture(enemy, E_ATTACK, filepathAttack, 12, 0.12f, false);
         LoadEnemyAnimationTexture(enemy, E_HURT, filepathHurt, 4, 0.056f, false);
-        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 10, 0.11f, false);
+        LoadEnemyAnimationTexture(enemy, E_DEATH, filepathDeath, 11, 0.11f, false);
         break;
     
     default:
