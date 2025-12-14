@@ -17,6 +17,9 @@ int main() {
     InitWindow(1280, 720, "EduQuest (Debug)");
     SetTargetFPS(60);
 
+    // Intialize Audio Device
+    InitAudioDevice();
+
     // Set Window Icon
     Image icon = LoadImage("assets/icon/icon.png");
     ImageFormat(&icon, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
@@ -102,6 +105,7 @@ int main() {
         }
     }
 
+    CloseAudioDevice();
     CloseWindow();
     return 0;
 }

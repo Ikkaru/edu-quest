@@ -2,13 +2,14 @@
 #include "MathQuest.h"
 #include "animation.h"
 #include "battle.h"
-#include "animation.h"
 #include "logika.h"
 #include "raygui.h"
 #include <stdbool.h>
 #include <stdio.h>  
 #include <stdlib.h>
 #include <string.h>
+
+Music bgm;
 
 // Variabel Soal 
 Question question;
@@ -33,21 +34,46 @@ bool enemyTurnDialogActive = false;
 float enemyTurnDialogTimer = 0.0f;
 const float ENEMY_TURN_DIALOG_DURATION = 3.0f;  
 
-
 BattleState currentBattleState = BATTLE_PLAYER_CHOICE;
 PlayerChoice playerChoice;
 GameState nextGameState = BATTLE;
+
+// Intitalize Soal Logika
+Soal daftarSoal[MAKS_SOAL];
+KunciJawaban daftarJawaban[MAKS_SOAL];
+int jumlahSoal = 0;
+int jumlahJawaban = 0;
+Soal CurrentQuestion;
+char correctAnswer;
 
 int selectedOption = 0;
 
 void InitBattle(int stage) {
     // Initialize Battle State
+    nextGameState = BATTLE;
     currentBattleState = BATTLE_PLAYER_CHOICE;
     currentEnemy = enemies[stage - 1];
     playerChoice = NOT_SELECTED;
     selectedOption = 0;
     InitPlayerAnimations();
     InitEnemyAnimations(&currentEnemy, stage);
+
+    // Setup All Global Variables
+    memset(userAnswer, 0, sizeof(userAnswer));
+    answerEditMode = true;
+    correct = false;
+    timer = QUESTION_TIME_LIMIT;
+    animationTimer = 0.0f;
+    enemyTurnDialogActive = false;  
+    enemyTurnDialogTimer = 0.0f;
+
+    // Play Background Audio
+    bgm = LoadMusicStream("assets/audio/bgm/battle.mp3");
+    PlayMusicStream(bgm);
+
+
+    jumlahSoal = muatSoal("quest.txt", daftarSoal, MAKS_SOAL);
+    jumlahJawaban = muatJawaban("answ.txt", daftarJawaban, MAKS_SOAL);
 }
 
 GameState UpdateBattle() {
@@ -57,6 +83,8 @@ GameState UpdateBattle() {
     // State Check
     switch (currentBattleState) {
         case BATTLE_PLAYER_CHOICE:
+            answerEditMode = true;
+            timer = QUESTION_TIME_LIMIT;
         break;
 
         case BATTLE_PLAYER_QUIZ:
@@ -66,7 +94,7 @@ GameState UpdateBattle() {
             else {
                 timer = 0;
                 TraceLog(LOG_INFO, "Time's up!");
-                ExecutePlayerDamage(false); // Time's up, treat as wrong answer
+                ExecutePlayerDamage(false);
             }
             if (IsKeyPressed(KEY_ENTER)) {
                 animationTimer = 0.0f; // Reset animation timer
@@ -85,30 +113,39 @@ GameState UpdateBattle() {
             // Trigger enemy hurt animation selesai
             if (IsPlayerAnimationFinished()) {
                 damageText.active = true;
-                PlayEnemyAnimation(&currentEnemy, E_HURT);
+                if (!correct) {
+                    enemyTurnDialogActive = true;
+                    timer = QUESTION_TIME_LIMIT;
+                    currentBattleState = BATTLE_ENEMY_TURN;
+                    enemyTurnDialogTimer = ENEMY_TURN_DIALOG_DURATION;
+                    playerChoice = NOT_SELECTED;
+                }
+                else {
+                    PlayEnemyAnimation(&currentEnemy, E_HURT);
+                }
+
                 ResetPlayerToIdle();
             }
 
             if (IsEnemyAnimationFinished(&currentEnemy) && animationTimer > 0.5f) {
-                ResetEnemyToIdle(&currentEnemy);
 
                 // Check if enemy defeated
                 if (currentEnemy.HP <= 0) {
                     TraceLog(LOG_INFO, "Enemy Defeated!");
                     PlayEnemyAnimation(&currentEnemy, E_DEATH);
-                    if (IsEnemyAnimationFinished(&currentEnemy)) {
-                        // Enemy death animation finished
-                        nextGameState = GAMEPLAY; // Kembali ke gameplay setelah menang
-                    }
+                    currentBattleState = BATTLE_VICTORY;
                     break;
                 }
+
+                ResetEnemyToIdle(&currentEnemy);
 
                 correct = false; // Reset correct for next turn
                 
 
                 // Enemy Turn
                 enemyTurnDialogActive = true;
-                currentBattleState = BATTLE_PLAYER_CHOICE;
+                currentBattleState = BATTLE_ENEMY_TURN;
+                timer = QUESTION_TIME_LIMIT;
                 enemyTurnDialogTimer = ENEMY_TURN_DIALOG_DURATION;
                 playerChoice = NOT_SELECTED;
 
@@ -123,6 +160,7 @@ GameState UpdateBattle() {
                 }
                 else {
                     enemyTurnDialogActive = false;
+                    answerEditMode = true;
                     question = generateQuestion(player.stage);
                 }
             }
@@ -133,28 +171,67 @@ GameState UpdateBattle() {
                 else {
                     timer = 0;
                     TraceLog(LOG_INFO, "Time's up!");
-                    ExecutePlayerDamage(false); // Time's up, treat as wrong answer
+                    ExecuteEnemyDamage(false); // Time's up, treat as wrong answer
                 }
                 if (IsKeyPressed(KEY_ENTER)) {
                     animationTimer = 0.0f; // Reset animation timer
                     TraceLog(LOG_INFO, "Player Answered: %s", userAnswer);
                     correct = IsAnswerCorrect();
-                    ExecutePlayerDamage(correct);
+                    // Log the value of 'correct'
+                    TraceLog(LOG_INFO, "Is answer correct? %s", correct ? "true" : "false");
+                    ExecuteEnemyDamage(correct);
                     memset(userAnswer, 0, sizeof(userAnswer)); // Clear answer
                     answerEditMode = false;
 
                 }
             }
-            
+            break;
+        case BATTLE_ENEMY_ANIMATION:
+            animationTimer += dt;
+            if (IsEnemyAnimationFinished(&currentEnemy)) {
+                damageText.active = true;
+                if (!correct) {
+                    PlayPlayerAnimation(P_HURT, false);
+                }
+                else {
+                    // Back to player's turn
+                    currentBattleState = BATTLE_PLAYER_CHOICE;
+                    playerChoice = NOT_SELECTED;
+                }
+                ResetEnemyToIdle(&currentEnemy);
+            }
 
 
+            if (IsPlayerAnimationFinished() && animationTimer > 0.5f) {
+                ResetPlayerToIdle();
+
+                // Check if player defeated
+                if (player.HP <= 0) {
+                    TraceLog(LOG_INFO, "Player Defeated!");
+                    nextGameState = GAME_OVER; // Game over jika player kalah
+                    break;
+                }
+
+                correct = false; // Reset correct for next turn
+
+                // Back to player's turn
+                currentBattleState = BATTLE_PLAYER_CHOICE;
+                playerChoice = NOT_SELECTED;
+            }
 
             break;
+
+        case BATTLE_VICTORY:
+            if (IsEnemyAnimationFinished(&currentEnemy)) {
+                nextGameState = GAMEPLAY; // Kembali ke Gameplay setelah Animasi Enemy Death tampilkan
+            }
     } 
     // Update Player Annimation
     UpdatePlayerAnimation(dt);
     // UpdateEnemyAnimation(&currentEnemy, deltaTime);
     UpdateEnemyAnimation(&currentEnemy, dt);
+    //Update Music Stream
+    UpdateMusicStream(bgm);
 
     // Update floating damage text
     if (damageText.active) {
@@ -187,7 +264,7 @@ void DrawBattleGUI() {
 
     ClearBackground(BLACK);
     // Draw Player Sprite
-    DrawPlayerSprite(150, 75, 3.0f);
+    DrawPlayerSprite(150, 80, 3.0f);
     char hpLabel[100];
     DrawHealthBar(100, 410, player.HP, player.maxHP, 200, GREEN, TextFormat("%s HP", player.name));
 
@@ -264,6 +341,7 @@ void DrawBattleGUI() {
             bool enterPressed = (IsKeyPressed(KEY_ENTER) && i == selectedOption);
 
             if ((mouseClicked || enterPressed) && isUsable) {
+                GuiSetState(STATE_NORMAL);
                 selectedOption = i;
                 switch (i) {
                     case 0: // Basic Attack
@@ -277,14 +355,6 @@ void DrawBattleGUI() {
                         player.energy += 1;
                         if (player.energy > player.maxEnergy) {
                             player.energy = player.maxEnergy;
-                        }
-
-                        // Generate Question based on Game Mode
-                        if (player.currentMode == MATH) {
-                            question = generateQuestion(player.stage);
-                        }
-                        else if (player.currentMode == LOGIC) {
-                            // Logic Question Generation (if implemented)
                         }
 
                         break;
@@ -314,14 +384,6 @@ void DrawBattleGUI() {
                         player.energy -= 3;
                         timer = QUESTION_TIME_LIMIT; // Reset Timer
                         memset(userAnswer, 0, sizeof(userAnswer)); // Clear previous answer
-                        
-                        // Generate Question based on Game Mode
-                        if (player.currentMode == MATH) {
-                            question = generateQuestion(player.stage);
-                        }
-                        else if (player.currentMode == LOGIC) {
-                            // Logic Question Generation (if implemented)
-                        }
                         
                         break;
                     case 3: // SKIP
@@ -401,6 +463,27 @@ void DrawBattleGUI() {
 
             break;
         
+        case BATTLE_ENEMY_ANIMATION:
+            // Annimation State Dialog Box
+            {
+                int aniWidth = 1100;
+                int aniHeight = 230;
+                int aniX = (screenW - aniWidth) / 2;
+                int aniY = 450;
+                Rectangle animRec = { aniX, aniY , aniWidth, aniHeight };
+                DrawRectangleRec(animRec, Fade(BLACK, 0.9f));
+                GuiGroupBox(animRec, NULL);
+
+                // Dialog Text Based on Correctness
+                if (!correct) {
+                    DrawText("You've got hit!", animRec.x + 250, animRec.y + 80, 30, RED);
+                }
+                else if (correct) {
+                    DrawText("You dodged the attack!", animRec.x + 300, animRec.y + 80, 30, GREEN);
+                }
+            }
+            break;
+        
 
     
     default:
@@ -449,7 +532,7 @@ void ExecutePlayerDamage(bool iscorrect) {
         // Create floating damage text
         sprintf(damageText.text, "-%d", damage);
         damageText.x = 900;
-        damageText.y = 100;
+        damageText.y = 120;
         damageText.alpha = 1.0f;
         damageText.lifetime = DAMAGE_TEXT_DURATION;
         damageText.color = RED;
@@ -465,12 +548,45 @@ void ExecutePlayerDamage(bool iscorrect) {
         damageText.alpha = 1.0f;
         damageText.lifetime = DAMAGE_TEXT_DURATION;
         damageText.color = GRAY;
-        damageText.active = true;
 
         TraceLog(LOG_INFO, "Wrong Answer! No damage dealt.");
     }
 
     currentBattleState = BATTLE_ANIMATION;
+}
+
+void ExecuteEnemyDamage(bool iscorrect) {
+    int damage = currentEnemy.damage;
+
+    if (!iscorrect) {
+        player.HP -= damage;
+        if (player.HP < 0) player.HP = 0;
+
+        // Create floating damage text
+        sprintf(damageText.text, "-%d", damage);
+        damageText.x = 250;
+        damageText.y = 120;
+        damageText.alpha = 1.0f;
+        damageText.lifetime = DAMAGE_TEXT_DURATION;
+        damageText.color = RED;
+
+        TraceLog(LOG_INFO, "Enemy Correct Answer! Dealt %d damage to %s", damage, player.name);
+
+    }
+    else {
+        // Wrong Answer, Miss
+        sprintf(damageText.text, "MISS");
+        damageText.x = 250;
+        damageText.y = 100;
+        damageText.alpha = 1.0f;
+        damageText.lifetime = DAMAGE_TEXT_DURATION;
+        damageText.color = GRAY;
+
+        TraceLog(LOG_INFO, "Enemy Wrong Answer! No damage dealt.");
+    }
+    PlayEnemyAnimation(&currentEnemy, E_ATTACK);
+
+    currentBattleState = BATTLE_ENEMY_ANIMATION;
 }
 
 // Function to draw quiz interface
@@ -484,6 +600,26 @@ void DrawQuizInterface(int screenW, int screenH) {
     Rectangle quizRec = { quizX, quizY , quizWidth, quizHeight };
     DrawRectangleRec(quizRec, Fade(BLACK, 0.9f));
     GuiGroupBox(quizRec, NULL);
+
+    // Generate Question based on Game Mode
+    if (player.currentMode == MATH) {
+        question = generateQuestion(player.stage);
+    }
+    else if (player.currentMode == LOGIC) {
+        int successGetQuestion = ambilSoalAcak(daftarSoal, jumlahSoal, daftarJawaban, jumlahJawaban, &CurrentQuestion, &correctAnswer);
+
+        if (successGetQuestion) {
+            TraceLog(LOG_INFO, "Logic Question Generated");
+            DrawText(CurrentQuestion.pertanyaan, quizX + 25, quizY + 43, 30, WHITE);
+            DrawText(TextFormat("A. %s", CurrentQuestion.pilihanA ), quizX + 25, quizY + 90, 25, WHITE);
+            DrawText(TextFormat("B. %s", CurrentQuestion.pilihanB ), quizX + 25, quizY + 130, 25, WHITE);
+            DrawText(TextFormat("C. %s", CurrentQuestion.pilihanC ), quizX + 25, quizY + 170, 25, WHITE);
+        }
+        else {
+            TraceLog(LOG_WARNING, "Failed to generate logic question.");
+        }
+    }
+
 
     // Draw Question Text
     DrawText(question.questionText, quizX + 25, quizY + 43, 30, WHITE);
@@ -554,7 +690,12 @@ void DrawTurnIndicator() {
         DrawText("Enemy Turn", screenW - textWidth - 20, 20, 20, WHITE);
         GuiDrawIcon(152, screenW - textWidth - 60, 15, 2, WHITE); 
     }
+}
 
-    
-    
+void UnloadBattle() {
+    UnloadPlayerAnimations();
+    UnloadEnemyAnimations(&currentEnemy);
+    StopMusicStream(bgm);
+    UnloadMusicStream(bgm);
+
 }

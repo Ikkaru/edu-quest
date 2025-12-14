@@ -88,7 +88,8 @@ typedef enum
     BATTLE_ANIMATION,
     BATTLE_ENEMY_TURN,
     BATTLE_ENEMY_ANIMATION,
-    BATTLE_DEFENSE_QUIZ,
+    BATTLE_VICTORY,
+    BATTLE_DEFEAT
 } BattleState;
 
 typedef enum
