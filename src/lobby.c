@@ -514,7 +514,7 @@ void DrawLobby() {
             
             // Deteksi klik
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                lobbyNextState = MAIN_MENU;
+                lobbyNextState = GAMEPLAY;
                 printf("[Lobby] Starting %s game for %s\n", 
                        (selectedMode == 0) ? "Math" : "Logic", player.name);
             }

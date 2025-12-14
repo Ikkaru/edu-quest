@@ -6,8 +6,9 @@ PlayerData player = {
     .HP = 100,
     .energy = 3,
     .maxEnergy = 3,
-    .score = 100,
-    .stage = 1
+    .score = 0,
+    .stage = 0,
+    .currentMode = MATH
 };
 
 Enemy enemies[MAX_ENEMIES] = {
@@ -24,5 +25,4 @@ Enemy enemies[MAX_ENEMIES] = {
 };
 
 Enemy currentEnemy;
-
 

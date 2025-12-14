@@ -125,6 +125,7 @@ void InitPlayerAnimations() {
     LoadPlayerAnimationTexture(P_ULTIMATE, "assets/Player/Player_Ultimate.png", 10, 0.1f, false);
     LoadPlayerAnimationTexture(P_HURT, "assets/Player/Player_Hurt.png", 1, 0.5f, false);
     LoadPlayerAnimationTexture(P_DEATH, "assets/Player/Player_Death.png", 10, 0.15f, false);
+    LoadPlayerAnimationTexture(P_RUN, "assets/Player/Player_Run.png", 10, 0.15f, true);
     // Start with IDLE animation
     PlayPlayerAnimation(P_IDLE, true);
 }

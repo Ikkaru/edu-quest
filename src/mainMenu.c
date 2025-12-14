@@ -117,7 +117,7 @@ void DrawMainMenu() {
         // Tombol Play Game
         const char textPlay[] = "Play Game";
         if (TextButton(textPlay, (GetScreenWidth() - MeasureText(textPlay, 40)) / 2, startY, 40)) {
-            nextState = BATTLE;  // SEMENTARA BUAT TESTING
+            nextState = LOBBY;  // SEMENTARA BUAT TESTING
         }
         // Tombol Exit
         const char textExit[] = "Exit";
