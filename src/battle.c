@@ -4,15 +4,18 @@
 #include "battle.h"
 #include "logika.h"
 #include "raygui.h"
+#include "SaveSystem.h"
 #include <stdbool.h>
 #include <stdio.h>  
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <math.h>
 
-Music bgm;
+Music bgm, over;
 
 // Variabel Soal 
-Question question;
+Question mathQuestion;
 
 // answer Variabel
 char userAnswer[64];
@@ -20,7 +23,7 @@ bool answerEditMode = true; // Apakah user sedang mengedit jawaban
 bool correct = false;
 
 // Konstanta Timer
-const float QUESTION_TIME_LIMIT = 10.0f;
+const float QUESTION_TIME_LIMIT = 20.0f;
 float timer = 0.0f;
 
 // Konstanta Floating Damage
@@ -41,10 +44,15 @@ GameState nextGameState = BATTLE;
 // Intitalize Soal Logika
 Soal daftarSoal[MAKS_SOAL];
 KunciJawaban daftarJawaban[MAKS_SOAL];
-int jumlahSoal = 0;
-int jumlahJawaban = 0;
+int jumlahSoalLogika = 0;
+int jumlahJawabanLo = 0;
 Soal CurrentQuestion;
 char correctAnswer;
+
+// Game Over Screen variables
+static float fadeAlpha = 0.0f;      // Nilai transparansi (0.0 - 1.0)
+static float fadeSpeed = 1.0f;      // Kecepatan fade (adjust sesuai selera)
+static bool fadeComplete = false;   // Flag untuk cek apakah fade sudah selesai
 
 int selectedOption = 0;
 
@@ -71,9 +79,28 @@ void InitBattle(int stage) {
     bgm = LoadMusicStream("assets/audio/bgm/battle.mp3");
     PlayMusicStream(bgm);
 
+    // Load Music
+    over = LoadMusicStream("assets/audio/bgm/gameover.mp3");
 
-    jumlahSoal = muatSoal("quest.txt", daftarSoal, MAKS_SOAL);
-    jumlahJawaban = muatJawaban("answ.txt", daftarJawaban, MAKS_SOAL);
+    // Gui Style
+    GuiSetStyle(DEFAULT, BORDER_WIDTH, 3);
+    GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, ColorToInt(BLACK));
+    GuiSetStyle(BUTTON, BORDER_COLOR_NORMAL, ColorToInt(WHITE));
+    GuiSetStyle(BUTTON, BASE_COLOR_FOCUSED, ColorToInt(WHITE));
+    GuiSetStyle(BUTTON, BASE_COLOR_PRESSED, ColorToInt(YELLOW));
+    GuiSetStyle(BUTTON, TEXT_COLOR_NORMAL, ColorToInt(WHITE));
+    GuiSetStyle(BUTTON, TEXT_COLOR_FOCUSED, ColorToInt(GRAY));
+    GuiSetStyle(TEXTBOX, BASE_COLOR_FOCUSED, ColorToInt (BLACK));
+    GuiSetStyle(TEXTBOX, BASE_COLOR_PRESSED, ColorToInt (BLACK));
+    GuiSetStyle(TEXTBOX, BORDER_COLOR_PRESSED, ColorToInt (WHITE));
+    GuiSetStyle(TEXTBOX, BORDER_COLOR_FOCUSED, ColorToInt (WHITE));
+    GuiSetStyle(TEXTBOX, TEXT_COLOR_PRESSED, ColorToInt(WHITE));
+    GuiSetStyle(TEXTBOX, TEXT_COLOR_FOCUSED, ColorToInt(WHITE));
+    GuiSetStyle(TEXTBOX, TEXT_COLOR_NORMAL, ColorToInt(WHITE));
+
+
+    jumlahSoalLogika = muatSoal("quest.txt", daftarSoal, MAKS_SOAL);
+    jumlahJawabanLo = muatJawaban("answ.txt", daftarJawaban, MAKS_SOAL);
 }
 
 GameState UpdateBattle() {
@@ -95,6 +122,7 @@ GameState UpdateBattle() {
                 timer = 0;
                 TraceLog(LOG_INFO, "Time's up!");
                 ExecutePlayerDamage(false);
+                memset(userAnswer, 0, sizeof(userAnswer));
             }
             if (IsKeyPressed(KEY_ENTER)) {
                 animationTimer = 0.0f; // Reset animation timer
@@ -119,6 +147,7 @@ GameState UpdateBattle() {
                     currentBattleState = BATTLE_ENEMY_TURN;
                     enemyTurnDialogTimer = ENEMY_TURN_DIALOG_DURATION;
                     playerChoice = NOT_SELECTED;
+                    correct = false; // Reset correct for next turn
                 }
                 else {
                     PlayEnemyAnimation(&currentEnemy, E_HURT);
@@ -133,7 +162,18 @@ GameState UpdateBattle() {
                 if (currentEnemy.HP <= 0) {
                     TraceLog(LOG_INFO, "Enemy Defeated!");
                     PlayEnemyAnimation(&currentEnemy, E_DEATH);
+                    player.score += 100;
                     currentBattleState = BATTLE_VICTORY;
+
+                    if (player.stage == player.maxStage) {
+                        TraceLog(LOG_INFO, "Player Won the Game!");
+                        saveScore(player.name, (player.currentMode == MATH) ? "math" : "logic", player.score);
+                        StopMusicStream(bgm);
+                        fadeAlpha = 0.0f; // Reset fade alpha
+                        fadeComplete = false; // Reset fade complete flag
+                        currentBattleState = BATTLE_GAMEOVER_VICTORY;
+                        break;
+                    }
                     break;
                 }
 
@@ -161,7 +201,7 @@ GameState UpdateBattle() {
                 else {
                     enemyTurnDialogActive = false;
                     answerEditMode = true;
-                    question = generateQuestion(player.stage);
+                    QuestionGeneration();
                 }
             }
             else {
@@ -197,6 +237,7 @@ GameState UpdateBattle() {
                     // Back to player's turn
                     currentBattleState = BATTLE_PLAYER_CHOICE;
                     playerChoice = NOT_SELECTED;
+                    correct = false; // Reset correct for next turn
                 }
                 ResetEnemyToIdle(&currentEnemy);
             }
@@ -208,7 +249,13 @@ GameState UpdateBattle() {
                 // Check if player defeated
                 if (player.HP <= 0) {
                     TraceLog(LOG_INFO, "Player Defeated!");
-                    nextGameState = GAME_OVER; // Game over jika player kalah
+                    PlayPlayerAnimation(P_DEATH, false);
+                    saveScore(player.name, (player.currentMode == MATH) ? "math" : "logic", player.score);
+                    StopMusicStream(bgm);
+
+                    fadeAlpha = 0.0f; // Reset fade alpha
+                    fadeComplete = false; // Reset fade complete flag
+                    currentBattleState = BATTLE_GAMEOVER_DEFEAT;
                     break;
                 }
 
@@ -221,10 +268,45 @@ GameState UpdateBattle() {
 
             break;
 
-        case BATTLE_VICTORY:
+        case BATTLE_GAMEOVER_VICTORY:
             if (IsEnemyAnimationFinished(&currentEnemy)) {
-                nextGameState = GAMEPLAY; // Kembali ke Gameplay setelah Animasi Enemy Death tampilkan
+                // Update fade alpha
+                if (!fadeComplete) {
+                    PlayMusicStream(over);
+                    fadeAlpha += fadeSpeed * dt;
+                    if (fadeAlpha >= 1.0f) {
+                        fadeAlpha = 1.0f;
+                        fadeComplete = true;
+                    }
+                }
             }
+
+            if (fadeComplete) {
+                if (IsKeyPressed(KEY_ENTER)) {
+                    nextGameState = MAIN_MENU;
+                }
+            }
+
+            break;
+        case BATTLE_GAMEOVER_DEFEAT:
+            if (IsPlayerAnimationFinished()) {
+                // Update fade alpha
+                if (!fadeComplete) {
+                    fadeAlpha += fadeSpeed * dt;
+                    PlayMusicStream(over);
+                    if (fadeAlpha >= 1.0f) {
+                        fadeAlpha = 1.0f;
+                        fadeComplete = true;
+                    }
+                }
+            }
+
+            if (fadeComplete) {
+                if (IsKeyPressed(KEY_ENTER)) {
+                    nextGameState = MAIN_MENU;
+                }
+            }
+            break;
     } 
     // Update Player Annimation
     UpdatePlayerAnimation(dt);
@@ -232,6 +314,7 @@ GameState UpdateBattle() {
     UpdateEnemyAnimation(&currentEnemy, dt);
     //Update Music Stream
     UpdateMusicStream(bgm);
+    UpdateMusicStream(over);
 
     // Update floating damage text
     if (damageText.active) {
@@ -249,23 +332,12 @@ GameState UpdateBattle() {
 
 // DRAW BATTLE GUI CORE
 void DrawBattleGUI() { 
-    // Gui Style
-    GuiSetStyle(DEFAULT, BORDER_WIDTH, 3);
-    GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, ColorToInt(BLACK));
-    GuiSetStyle(BUTTON, BORDER_COLOR_NORMAL, ColorToInt(WHITE));
-    GuiSetStyle(BUTTON, BASE_COLOR_FOCUSED, ColorToInt(WHITE));
-    GuiSetStyle(BUTTON, BASE_COLOR_PRESSED, ColorToInt(YELLOW));
-    GuiSetStyle(BUTTON, TEXT_COLOR_NORMAL, ColorToInt(WHITE));
-    GuiSetStyle(BUTTON, TEXT_COLOR_FOCUSED, ColorToInt(GRAY));
-
-
     int screenW = GetScreenWidth();
     int screenH = GetScreenHeight();
 
     ClearBackground(BLACK);
     // Draw Player Sprite
     DrawPlayerSprite(150, 80, 3.0f);
-    char hpLabel[100];
     DrawHealthBar(100, 410, player.HP, player.maxHP, 200, GREEN, TextFormat("%s HP", player.name));
 
     // Draw Enemy Sprite
@@ -357,6 +429,8 @@ void DrawBattleGUI() {
                             player.energy = player.maxEnergy;
                         }
 
+                        QuestionGeneration();
+
                         break;
                     case 1: // Skill
                         playerChoice = SKILL;
@@ -367,13 +441,8 @@ void DrawBattleGUI() {
                         timer = QUESTION_TIME_LIMIT; // Reset Timer
 
                         memset(userAnswer, 0, sizeof(userAnswer)); // Clear previous answer
-                        // Generate Question based on Game Mode
-                        if (player.currentMode == MATH) {
-                            question = generateQuestion(player.stage);
-                        }
-                        else if (player.currentMode == LOGIC) {
-                            // Logic Question Generation (if implemented)
-                        }
+                        
+                        QuestionGeneration();
                         
                         break;
                     case 2:
@@ -385,6 +454,8 @@ void DrawBattleGUI() {
                         timer = QUESTION_TIME_LIMIT; // Reset Timer
                         memset(userAnswer, 0, sizeof(userAnswer)); // Clear previous answer
                         
+                        QuestionGeneration();
+
                         break;
                     case 3: // SKIP
                         playerChoice = SKIP;
@@ -483,8 +554,49 @@ void DrawBattleGUI() {
                 }
             }
             break;
-        
 
+        case BATTLE_VICTORY:
+            // if enemy defeated, Victory for current stage
+            if (IsEnemyAnimationFinished(&currentEnemy)) {
+                nextGameState = GAMEPLAY;
+            }
+            break;
+
+        case BATTLE_GAMEOVER_VICTORY:
+            Color titleColor = Fade(WHITE, fadeAlpha);
+            Color textColor = Fade(WHITE, fadeAlpha);
+
+            DrawRectangle(0, 0, screenW, screenH, Fade(BLACK, fadeAlpha));
+
+            DrawText("Congratulations!", screenW / 2 - MeasureText("Congratulations!", 60) / 2, 150, 80, titleColor);
+            DrawText("You have defeated all enemies!", screenW / 2 - MeasureText("You have defeated all enemies!", 30) / 2, 230, 30, titleColor);
+            DrawText(TextFormat("Score: %d", player.score), screenW / 2 - MeasureText(TextFormat("Score: %d", player.score), 30) / 2, 400, 30, textColor);
+
+            if (fadeComplete) {
+                float blinkAlpha = (sinf(GetTime() * 3.0f) + 1.0f) / 2.0f; // Oscillate between 0 and 1
+                Color blinkColor = Fade(YELLOW, blinkAlpha);
+
+                DrawText("Press ENTER to Return to Main Menu", (screenW - MeasureText("Press ENTER to Return to Main Menu", 20)) / 2 - 30, 550, 25, blinkColor);
+            }
+            break;
+
+        case BATTLE_GAMEOVER_DEFEAT:
+            titleColor = Fade(WHITE, fadeAlpha);
+            textColor = Fade(WHITE, fadeAlpha);
+
+            DrawRectangle(0, 0, screenW, screenH, Fade(BLACK, fadeAlpha));
+
+            DrawText("You Fallen!", screenW / 2 - MeasureText("You Fallen!", 80) / 2, 150, 80, titleColor);
+            DrawText("You have been defeated by the enemy.", screenW / 2 - MeasureText("You have been defeated by the enemy.", 30) / 2, 230, 30, titleColor);
+            DrawText(TextFormat("Score: %d", player.score), screenW / 2 - MeasureText(TextFormat("Score: %d", player.score), 30) / 2, 400, 30, textColor);
+
+            if (fadeComplete) {
+                float blinkAlpha = (sinf(GetTime() * 3.0f) + 1.0f) / 2.0f; // Oscillate between 0 and 1
+                Color blinkColor = Fade(YELLOW, blinkAlpha);
+
+                DrawText("Press ENTER to Return to Main Menu", (screenW - MeasureText("Press ENTER to Return to Main Menu", 20))/ 2 - 30, 550, 25, blinkColor);
+            }
+            break;
     
     default:
         break;
@@ -497,12 +609,22 @@ void DrawBattleGUI() {
 bool IsAnswerCorrect() {
     if (player.currentMode == MATH) {
         int answerInt = atoi(userAnswer);
-        bool isCorrect = (answerInt == question.correctAnswer);
+        bool isCorrect = (answerInt == mathQuestion.correctAnswer);
         return isCorrect;
     }
     else if (player.currentMode == LOGIC) {
+        if  (tolower(userAnswer[0]) == tolower(correctAnswer)) {
+            bool isCorrect = true;
+            return isCorrect;
+
+        }
+        else {
+            bool isCorrect = false;
+            return isCorrect;
+        }
         
     }
+    return false;
 }
 
 void ExecutePlayerDamage(bool iscorrect) {
@@ -589,6 +711,23 @@ void ExecuteEnemyDamage(bool iscorrect) {
     currentBattleState = BATTLE_ENEMY_ANIMATION;
 }
 
+void QuestionGeneration() {
+    // Generate Question based on Game Mode
+    if (player.currentMode == MATH) {
+        mathQuestion = generateQuestion(player.stage);
+    }
+    else if (player.currentMode == LOGIC) {
+        int successGetQuestion = ambilSoalAcak(daftarSoal, jumlahSoalLogika, daftarJawaban, jumlahJawabanLo, &CurrentQuestion, &correctAnswer);
+
+        if (successGetQuestion) {
+            TraceLog(LOG_INFO, "Logic Question Generated");
+        }
+        else {
+            TraceLog(LOG_WARNING, "Failed to generate logic mathQuestion.");
+        }
+    }
+}
+
 // Function to draw quiz interface
 void DrawQuizInterface(int screenW, int screenH) {
     // Draw Quiz Interface
@@ -601,31 +740,19 @@ void DrawQuizInterface(int screenW, int screenH) {
     DrawRectangleRec(quizRec, Fade(BLACK, 0.9f));
     GuiGroupBox(quizRec, NULL);
 
-    // Generate Question based on Game Mode
+    // Draw Question Text
     if (player.currentMode == MATH) {
-        question = generateQuestion(player.stage);
+        DrawText(mathQuestion.questionText, quizX + 25, quizY + 43, 30, WHITE);
     }
     else if (player.currentMode == LOGIC) {
-        int successGetQuestion = ambilSoalAcak(daftarSoal, jumlahSoal, daftarJawaban, jumlahJawaban, &CurrentQuestion, &correctAnswer);
-
-        if (successGetQuestion) {
-            TraceLog(LOG_INFO, "Logic Question Generated");
-            DrawText(CurrentQuestion.pertanyaan, quizX + 25, quizY + 43, 30, WHITE);
-            DrawText(TextFormat("A. %s", CurrentQuestion.pilihanA ), quizX + 25, quizY + 90, 25, WHITE);
-            DrawText(TextFormat("B. %s", CurrentQuestion.pilihanB ), quizX + 25, quizY + 130, 25, WHITE);
-            DrawText(TextFormat("C. %s", CurrentQuestion.pilihanC ), quizX + 25, quizY + 170, 25, WHITE);
-        }
-        else {
-            TraceLog(LOG_WARNING, "Failed to generate logic question.");
-        }
+        DrawText(CurrentQuestion.pertanyaan, quizX + 20, quizY + 38, 30, WHITE);
+        DrawText(TextFormat("A. %s", CurrentQuestion.pilihanA ), quizX + 25, quizY + 83 , 25, WHITE);
+        DrawText(TextFormat("B. %s", CurrentQuestion.pilihanB ), quizX + 25, quizY + 115, 25, WHITE);
+        DrawText(TextFormat("C. %s", CurrentQuestion.pilihanC ), quizX + 25, quizY + 147, 25, WHITE);
     }
 
-
-    // Draw Question Text
-    DrawText(question.questionText, quizX + 25, quizY + 43, 30, WHITE);
-
     // Input Box
-    Rectangle inputRec = { quizX + 20, quizY + 170, 200, 40 };
+    Rectangle inputRec = { quizX + 20, quizY + 180, 200, 40 };
 
     if (GuiTextBox(inputRec, userAnswer, sizeof(userAnswer), answerEditMode)) {
         answerEditMode = !answerEditMode; // Toggle edit mode on click
@@ -677,7 +804,6 @@ void DrawTurnIndicator() {
     int screenW = GetScreenWidth();
     
     bool isPlayerTurn = (currentBattleState == BATTLE_PLAYER_CHOICE || currentBattleState == BATTLE_PLAYER_QUIZ || currentBattleState == BATTLE_ANIMATION);
-    bool isEnemyTurn = (currentBattleState == BATTLE_ENEMY_TURN);
 
 
     if (isPlayerTurn) {  
@@ -697,5 +823,7 @@ void UnloadBattle() {
     UnloadEnemyAnimations(&currentEnemy);
     StopMusicStream(bgm);
     UnloadMusicStream(bgm);
+    StopMusicStream(over);
+    UnloadMusicStream(over);
 
 }

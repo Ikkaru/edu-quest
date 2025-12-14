@@ -6,7 +6,6 @@ typedef enum {
     LOBBY,
     GAMEPLAY,
     BATTLE,
-    GAME_OVER,
     EXIT
 } GameState;
 
@@ -89,7 +88,8 @@ typedef enum
     BATTLE_ENEMY_TURN,
     BATTLE_ENEMY_ANIMATION,
     BATTLE_VICTORY,
-    BATTLE_DEFEAT
+    BATTLE_GAMEOVER_VICTORY,
+    BATTLE_GAMEOVER_DEFEAT
 } BattleState;
 
 typedef enum

@@ -19,6 +19,7 @@ void ExecuteEnemyDamage(bool iscorrect);
 bool IsAnswerCorrect();
 void DrawTurnIndicator();
 void UnloadBattle();
+void QuestionGeneration();
 
 
 // Floating Damage Text System
