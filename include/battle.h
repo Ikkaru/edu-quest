@@ -18,6 +18,7 @@ void ExecutePlayerDamage(bool iscorrect);
 void ExecuteEnemyDamage(bool iscorrect);
 bool IsAnswerCorrect();
 void DrawTurnIndicator();
+void UnloadBattle();
 
 
 // Floating Damage Text System

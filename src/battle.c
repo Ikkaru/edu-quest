@@ -38,10 +38,19 @@ BattleState currentBattleState = BATTLE_PLAYER_CHOICE;
 PlayerChoice playerChoice;
 GameState nextGameState = BATTLE;
 
+// Intitalize Soal Logika
+Soal daftarSoal[MAKS_SOAL];
+KunciJawaban daftarJawaban[MAKS_SOAL];
+int jumlahSoal = 0;
+int jumlahJawaban = 0;
+Soal CurrentQuestion;
+char correctAnswer;
+
 int selectedOption = 0;
 
 void InitBattle(int stage) {
     // Initialize Battle State
+    nextGameState = BATTLE;
     currentBattleState = BATTLE_PLAYER_CHOICE;
     currentEnemy = enemies[stage - 1];
     playerChoice = NOT_SELECTED;
@@ -49,9 +58,22 @@ void InitBattle(int stage) {
     InitPlayerAnimations();
     InitEnemyAnimations(&currentEnemy, stage);
 
+    // Setup All Global Variables
+    memset(userAnswer, 0, sizeof(userAnswer));
+    answerEditMode = true;
+    correct = false;
+    timer = QUESTION_TIME_LIMIT;
+    animationTimer = 0.0f;
+    enemyTurnDialogActive = false;  
+    enemyTurnDialogTimer = 0.0f;
+
     // Play Background Audio
     bgm = LoadMusicStream("assets/audio/bgm/battle.mp3");
     PlayMusicStream(bgm);
+
+
+    jumlahSoal = muatSoal("quest.txt", daftarSoal, MAKS_SOAL);
+    jumlahJawaban = muatJawaban("answ.txt", daftarJawaban, MAKS_SOAL);
 }
 
 GameState UpdateBattle() {
@@ -106,18 +128,16 @@ GameState UpdateBattle() {
             }
 
             if (IsEnemyAnimationFinished(&currentEnemy) && animationTimer > 0.5f) {
-                ResetEnemyToIdle(&currentEnemy);
 
                 // Check if enemy defeated
                 if (currentEnemy.HP <= 0) {
                     TraceLog(LOG_INFO, "Enemy Defeated!");
                     PlayEnemyAnimation(&currentEnemy, E_DEATH);
-                    if (IsEnemyAnimationFinished(&currentEnemy)) {
-                        // Enemy death animation finished
-                        nextGameState = GAMEPLAY; // Kembali ke gameplay setelah menang
-                    }
+                    currentBattleState = BATTLE_VICTORY;
                     break;
                 }
+
+                ResetEnemyToIdle(&currentEnemy);
 
                 correct = false; // Reset correct for next turn
                 
@@ -200,6 +220,11 @@ GameState UpdateBattle() {
             }
 
             break;
+
+        case BATTLE_VICTORY:
+            if (IsEnemyAnimationFinished(&currentEnemy)) {
+                nextGameState = GAMEPLAY; // Kembali ke Gameplay setelah Animasi Enemy Death tampilkan
+            }
     } 
     // Update Player Annimation
     UpdatePlayerAnimation(dt);
@@ -332,14 +357,6 @@ void DrawBattleGUI() {
                             player.energy = player.maxEnergy;
                         }
 
-                        // Generate Question based on Game Mode
-                        if (player.currentMode == MATH) {
-                            question = generateQuestion(player.stage);
-                        }
-                        else if (player.currentMode == LOGIC) {
-                            // Logic Question Generation (if implemented)
-                        }
-
                         break;
                     case 1: // Skill
                         playerChoice = SKILL;
@@ -367,14 +384,6 @@ void DrawBattleGUI() {
                         player.energy -= 3;
                         timer = QUESTION_TIME_LIMIT; // Reset Timer
                         memset(userAnswer, 0, sizeof(userAnswer)); // Clear previous answer
-                        
-                        // Generate Question based on Game Mode
-                        if (player.currentMode == MATH) {
-                            question = generateQuestion(player.stage);
-                        }
-                        else if (player.currentMode == LOGIC) {
-                            // Logic Question Generation (if implemented)
-                        }
                         
                         break;
                     case 3: // SKIP
@@ -592,6 +601,26 @@ void DrawQuizInterface(int screenW, int screenH) {
     DrawRectangleRec(quizRec, Fade(BLACK, 0.9f));
     GuiGroupBox(quizRec, NULL);
 
+    // Generate Question based on Game Mode
+    if (player.currentMode == MATH) {
+        question = generateQuestion(player.stage);
+    }
+    else if (player.currentMode == LOGIC) {
+        int successGetQuestion = ambilSoalAcak(daftarSoal, jumlahSoal, daftarJawaban, jumlahJawaban, &CurrentQuestion, &correctAnswer);
+
+        if (successGetQuestion) {
+            TraceLog(LOG_INFO, "Logic Question Generated");
+            DrawText(CurrentQuestion.pertanyaan, quizX + 25, quizY + 43, 30, WHITE);
+            DrawText(TextFormat("A. %s", CurrentQuestion.pilihanA ), quizX + 25, quizY + 90, 25, WHITE);
+            DrawText(TextFormat("B. %s", CurrentQuestion.pilihanB ), quizX + 25, quizY + 130, 25, WHITE);
+            DrawText(TextFormat("C. %s", CurrentQuestion.pilihanC ), quizX + 25, quizY + 170, 25, WHITE);
+        }
+        else {
+            TraceLog(LOG_WARNING, "Failed to generate logic question.");
+        }
+    }
+
+
     // Draw Question Text
     DrawText(question.questionText, quizX + 25, quizY + 43, 30, WHITE);
 
@@ -661,7 +690,12 @@ void DrawTurnIndicator() {
         DrawText("Enemy Turn", screenW - textWidth - 20, 20, 20, WHITE);
         GuiDrawIcon(152, screenW - textWidth - 60, 15, 2, WHITE); 
     }
+}
 
-    
-    
+void UnloadBattle() {
+    UnloadPlayerAnimations();
+    UnloadEnemyAnimations(&currentEnemy);
+    StopMusicStream(bgm);
+    UnloadMusicStream(bgm);
+
 }
