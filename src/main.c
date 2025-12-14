@@ -5,7 +5,8 @@
 #include "animation.h"
 #include "global.h"
 #include "raygui.h"
-#include "lobby.h"  // Tambah ini
+#include "lobby.h"
+#include "gameplay.h"  // Tambah include gameplay
 
 int main() {
     // Initialize State
@@ -38,14 +39,15 @@ int main() {
         case MAIN_MENU:
             nextState = UpdateMainMenu();
             break;
-        case LOBBY:  // Tambah case untuk lobby
+        case LOBBY:
             nextState = UpdateLobby();
             break;
-
+        case GAMEPLAY:  // Tambah case untuk gameplay
+            nextState = UpdateGameplay();
+            break;
         case BATTLE:
             nextState = UpdateBattle();
             break;
-
         default:
             break;
         }
@@ -58,12 +60,16 @@ int main() {
                 DrawMainMenu();
             EndDrawing();
             break;  
-        case LOBBY:  // Tambah case untuk lobby
+        case LOBBY:
             BeginDrawing();
                 DrawLobby();
             EndDrawing();
             break;
-
+        case GAMEPLAY:  // Tambah case untuk gameplay
+            BeginDrawing();
+                DrawGameplay();
+            EndDrawing();
+            break;
         case BATTLE:
             BeginDrawing();
                 DrawBattleGUI();
@@ -77,7 +83,8 @@ int main() {
             switch (currentState)
             {
             case MAIN_MENU: UnloadMainMenu(); break;
-            case LOBBY: UnloadLobby(); break;  // Tambah untuk lobby
+            case LOBBY: UnloadLobby(); break;
+            case GAMEPLAY: UnloadGameplay(); break;  // Tambah untuk gameplay
             case BATTLE: break;
             }
 
@@ -85,7 +92,8 @@ int main() {
             switch (nextState)
             {
             case MAIN_MENU: InitMainMenu(); break;
-            case LOBBY: InitLobby(); break;  // Tambah untuk lobby
+            case LOBBY: InitLobby(); break;
+            case GAMEPLAY: InitGameplay(); break;  // Tambah untuk gameplay
             case BATTLE: InitBattle(player.stage); break;
             case EXIT:
                 CloseWindow();

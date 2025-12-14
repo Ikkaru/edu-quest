@@ -37,6 +37,7 @@ typedef enum {
 // Player Annimation
 typedef enum {
     WALKING,
+    P_RUN,
     P_IDLE,
     P_BASIC_ATTACK,
     P_SKILL,
