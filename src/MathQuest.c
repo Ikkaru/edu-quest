@@ -183,27 +183,37 @@ Question generateLevel6() {
 // LEVEL 7: Sangat Sulit - sebelumnya level 9
 Question generateLevel7() {
     Question q;
-    int num1 = generateRandomNumber(50, 100);
-    int num2 = generateRandomNumber(2, 9);
-    int num3 = generateRandomNumber(2, 5);
+    int num1, num2, num3;
+    
+    // Generate angka yang memastikan pembagian menghasilkan bilangan bulat
+    do {
+        num2 = generateRandomNumber(2, 9);  // Pembagi (2-9)
+        num1 = generateRandomNumber(50, 100);
+        // Pastikan num1 habis dibagi num2
+    } while (num1 % num2 != 0);
+    
+    num3 = generateRandomNumber(2, 5);  // Pangkat (2-5)
     
     q.num1 = num1;
     q.num2 = num2;
     q.num3 = num3;
     
-    while (num1 % num2 != 0) {
-        num1 = generateRandomNumber(50, 100);
-        num2 = generateRandomNumber(2, 9);
-    }
+    // Hitung pangkat terlebih dahulu (num3^2)
+    int powerResult = num3 * num3;  // num3^2
     
+    // Kemudian hitung pembagian: num1 / num2
     int divisionResult = num1 / num2;
-    int powerResult = 1;
-    for (int i = 0; i < num3; i++) {
-        powerResult *= num3;
-    }
     
+    // Terakhir, kalikan hasil pembagian dengan hasil pangkat
     q.correctAnswer = divisionResult * powerResult;
-    sprintf(q.questionText, "%d / %d * %d^2 = ?", num1, num2, num3);
+    
+    // Format pertanyaan
+    sprintf(q.questionText, "%d / %d × %d² = ?", num1, num2, num3);
+    
+    // Debug output (opsional)
+    printf("[DEBUG Level 7] %d / %d × %d² = (%d / %d) × (%d²) = %d × %d = %d\n", 
+           num1, num2, num3, num1, num2, num3, divisionResult, powerResult, q.correctAnswer);
+    
     return q;
 }
 
