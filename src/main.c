@@ -14,7 +14,7 @@ int main() {
     GameState nextState;
 
     // Initialize Window
-    InitWindow(1280, 720, "EduQuest (Debug)");
+    InitWindow(1280, 720, "EduQuest");
     SetTargetFPS(60);
 
     // Intialize Audio Device
