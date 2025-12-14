@@ -85,7 +85,7 @@ int main() {
             case MAIN_MENU: UnloadMainMenu(); break;
             case LOBBY: UnloadLobby(); break;
             case GAMEPLAY: UnloadGameplay(); break;  // Tambah untuk gameplay
-            case BATTLE: break;
+            case BATTLE: UnloadBattle(); break;
             }
 
             // Load memori state berikutnya
