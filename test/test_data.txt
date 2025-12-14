@@ -1,0 +1,4 @@
+test_data user login:      Expected:                                                            result:
+Halo                       Load History file score yang sudah ada dengan username Halo          Success (Berhasil load History)
+Budi                       Otomatis Membuat file history baru ketika mode sudah dipilih         Sucess (Berhasil Membuat file history baru ketika sudah memilih mode)
+
