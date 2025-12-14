@@ -11,7 +11,8 @@ void UnloadGameplay();
 extern GameState gameplayNextState;
 
 // ============ FUNGSI UNTUK MENGUBAH VARIABEL KUSTOMISASI ============
-void SetPlayerWalkDuration(float duration);    // Mengubah durasi perjalanan (detik)
+void SetPlayerWalkDuration(float duration);    // Mengubah durasi perjalanan masuk
+void SetPlayerExitDuration(float duration);    // Mengubah durasi perjalanan keluar
 void SetPlayerStartX(int startX);             // Mengubah posisi X awal
 void SetPlayerStopX(int stopX);               // Mengubah posisi X berhenti
 void SetPlayerY(int y);                       // Mengubah posisi Y
