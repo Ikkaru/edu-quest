@@ -23,3 +23,5 @@ ID: Program ini merupakan sebuah game edukatif berbasis bahasa C yang dirancang 
 <br>
 <br>
 ALL ASSETS IN THIS PROJECT ARE TAKEN FROM VARIOUS SOURCES, WITH ALL RESPECT GIVEN TO ALL OWNERS OF ASSETS USED IN THIS PROJECT.
+
+All Music on this project has been removed, bc is not copyright free music.
