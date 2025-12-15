@@ -570,7 +570,7 @@ void DrawBattleGUI() {
 
             DrawRectangle(0, 0, screenW, screenH, Fade(BLACK, fadeAlpha));
 
-            DrawText("Congratulations!", screenW / 2 - MeasureText("Congratulations!", 60) / 2, 150, 80, titleColor);
+            DrawText("Congratulations!", screenW / 2 - MeasureText("Congratulations!", 80) / 2, 150, 80, titleColor);
             DrawText("You have defeated all enemies!", screenW / 2 - MeasureText("You have defeated all enemies!", 30) / 2, 230, 30, titleColor);
             DrawText(TextFormat("Score: %d", player.score), screenW / 2 - MeasureText(TextFormat("Score: %d", player.score), 30) / 2, 400, 30, textColor);
 
